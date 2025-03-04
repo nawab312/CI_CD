@@ -11,3 +11,26 @@
     - Runs unit *tests & static analysis* before merging.
     - Creates a *Pull Request (PR)* for review.
     - After approval, the feature branch is merged into develop.
+- **Develop Branch (`develop`)**
+  - Purpose: The integration branch where all feature branches merge.
+  - What happens here?
+    - CI Pipeline runs → Code quality checks, security scanning, unit tests.
+    - Developers validate new features before pushing them forward.
+    - If stable, merge into `staging` for QA testing.
+- **Staging Branch (`staging`)**
+  - Purpose: Acts as a pre-production environment.
+  - What happens here?
+    - Automated integration & end-to-end (E2E) tests.
+    - Performance & security testing before production.
+    - If approved → merge into main for production deployment.
+- **Main Branch (`main`)**
+  - Purpose: Production-ready code only.
+  - What happens here?
+    - Code is deployed to production via Blue-Green Deployment or Canary Release.
+    - If issues arise → rollback using `git revert` or Kubernetes `kubectl rollout undo`.
+- **Hotfix Branch (`hotfix/*`)**
+  - Purpose: For urgent bug fixes in production.
+  - Workflow:
+    - Branch out from main (`hotfix/fix-login-error`).
+    - Fix the issue → Test → Merge into main and develop.
+    - Deploy immediately.

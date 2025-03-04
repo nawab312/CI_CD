@@ -1,6 +1,6 @@
 **Scenario:** Your company has *Dev*, *Staging*, and *Production* environments. How would you design a CI/CD pipeline that ensures proper testing before code reaches production?
 
-**Source Code Management (SCM) Strategy**
+### Source Code Management (SCM) Strategy ###
 - Use Git branching strategy (e.g., `feature`, `develop`, `staging`, `main`)
 - **Feature Branches (`feature/*`)**
   - Who works here? Developers working on new features.
@@ -35,7 +35,7 @@
     - Fix the issue → Test → Merge into main and develop.
     - Deploy immediately.
 
-**CI Pipeline (Build & Test in Dev)**
+### CI Pipeline (Build & Test in Dev) ###
 - This CI pipeline is triggered on every commit to the `develop` branch and consists of:
   - **Linting & Static Analysis** → Detect code issues early
     - Ensures code follows coding standards.
@@ -78,3 +78,8 @@
     - Stores the built artifacts for later use in CD pipelines.
     - Docker Images → Pushed to DockerHub or AWS ECR.
     - JAR/WAR Files → Pushed to Nexus, JFrog Artifactory.
+
+### Deployment to Staging (Automated Testing & Approval) in CI/CD ###
+The staging environment is a pre-production space where the application is deployed and tested before it moves to production.
+
+    

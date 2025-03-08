@@ -80,6 +80,15 @@
     - JAR/WAR Files → Pushed to Nexus, JFrog Artifactory.
 
 ### Deployment to Staging (Automated Testing & Approval) in CI/CD ###
-The staging environment is a pre-production space where the application is deployed and tested before it moves to production.
+The staging environment is a pre-production space where the application is deployed and tested before it moves to production. Simulates a real-world production environment. Runs integration, performance, and security tests. Ensures stability, security, and reliability before going live. Requires manual or automated approval before production deployment. Once code is merged into the `staging` branch, the following steps occur:
+- **Deploy to Staging Environment**
+  - Example: ```bash helm upgrade --install myapp ./helm-chart --namespace staging```
+- **Integration & End-to-End (E2E) Tests**
+  - Ensures different modules work together correctly. Simulates real user interactions.
+  - Tools: Selenium (Automated UI Testing), Postman/Newman (API Testing)
+- **Performance & Load Testing**
+  - Ensures the system can handle high traffic before production.
+  - Identifies slow queries, crashes, and resource limitations.
+
 
     

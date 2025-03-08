@@ -104,7 +104,7 @@ The staging environment is a pre-production space where the application is deplo
     git push origin main
     ```
   - **Manual Approval:** Requires QA sign-off before production. Example Jenkins Pipeline Approval
-    '''groovy
+    ```groovy
     stage('Approval') {
       input {
           message "Deploy to Production?"
@@ -112,6 +112,28 @@ The staging environment is a pre-production space where the application is deplo
       }
     }
     ```
+
+### Production Deployment (Blue-Green or Canary) in CI/CD ###
+Production deployment is the final step in a CI/CD pipeline where the application is released for real users. Key Goals:
+- Deploy without downtime.
+- Ensure the new version is stable before full rollout.
+- Provide a *rollback strategy* in case of failure.
+Once the code is merged into the main branch, deployment is triggered using one of these strategies:
+- **Blue-Green Deployment**: Two identical production environments: Blue (Current Version - Live), Green (New Version - Staging)
+  - **Steps**
+    - Deploy the new version to the Green environment.
+    - Perform testing & health checks.
+    - If stable → switch traffic from Blue → Green.
+    - If issues arise → rollback by switching back to Blue.
+  - **Use Case:**
+    - Zero-downtime deployments.
+    - Easy rollback by switching traffic back to Blue.
+- **Canary Deployment**: Deploy the new version to a small % of users before full rollout. Gradually increase traffic to the new version while monitoring.
+  - **Use Case:**
+    - Reduces risk by slowly rolling out changes. Allows monitoring before full deployment.
+- **Smoke Tests & Health Checks**: Ensures the new deployment is *healthy & functional* before serving all users.
+  - **Tools:** Prometheus (Monitoring), Grafana (Visualization), Kubernetes Liveness & Readiness Probes
+- **Rollback Strategy (Keep Last Stable Release)** If the new deployment fails, the system must quickly rollback to the last working version.
 
 
 

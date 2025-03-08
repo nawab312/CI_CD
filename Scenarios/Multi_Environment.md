@@ -89,6 +89,30 @@ The staging environment is a pre-production space where the application is deplo
 - **Performance & Load Testing**
   - Ensures the system can handle high traffic before production.
   - Identifies slow queries, crashes, and resource limitations.
+  - Tools: Apache JMeter (Load Testing)
+- **Security Scanning**
+  - Detects vulnerabilities before deploying to production.
+  - Ensures compliance with OWASP, GDPR, and ISO standards.
+  - Tools: OWASP ZAP (Web App Security), Trivy (Container Security)
+- **Approval Stage (Manual or Automated)**
+  - Ensures the staging build is stable before moving to production.
+  - Can be manual (QA team review) or automated (if all tests pass).
+  - **Automated Approval:** If all tests pass, automatically merge to `main`
+    ```bash
+    git checkout main
+    git merge staging
+    git push origin main
+    ```
+  - **Manual Approval:** Requires QA sign-off before production. Example Jenkins Pipeline Approval
+    '''groovy
+    stage('Approval') {
+      input {
+          message "Deploy to Production?"
+          ok "Proceed"
+      }
+    }
+    ```
+
 
 
     

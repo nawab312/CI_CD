@@ -55,3 +55,182 @@
   - Create a hotfix/* branch from main.
   - Jenkins will trigger the build and deploy it to Production.
   - After a successful hotfix deployment, the hotfix/* branch is merged back into main and staging to ensure consistency across environments.
+ 
+**Jenkins Pipeline for the Dev environment , Similar is for Stagin**
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        // Environment variables for S3 bucket and WebLogic details
+        S3_BUCKET = 'your-s3-bucket-name'
+        DEPLOY_SERVER = 'your-weblogic-server-ip'
+        DEPLOY_PATH = '/path/to/deploy/directory'
+        MAVEN_HOME = '/opt/maven'
+        ANSIBLE_PLAYBOOK = 'deploy-to-weblogic.yml'
+        INVENTORY_FILE = 'inventory.ini'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Checkout the 'dev' branch from GitHub
+                git branch: 'dev', url: 'https://github.com/your-org/your-repo.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                script {
+                    // Run Maven build and unit tests
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn clean install -DskipTests
+                    '''
+                }
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    // Run JUnit tests to ensure functionality
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn test
+                    '''
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis for static code analysis
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn sonar:sonar -Dsonar.projectKey=your-project-key -Dsonar.host.url=http://your-sonarqube-server
+                    '''
+                }
+            }
+        }
+
+        stage('Store Artifacts in S3') {
+            steps {
+                script {
+                    // Upload the WAR/JAR file to S3 bucket
+                    sh '''#!/bin/bash
+                    aws s3 cp target/your-application.war s3://${S3_BUCKET}/artifacts/your-application-${BUILD_NUMBER}.war
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to WebLogic (Dev)') {
+            steps {
+                script {
+                    // Run the Ansible playbook for deployment
+                    sh '''#!/bin/bash
+                    ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK}
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            // Notify on successful deployment
+            echo 'Dev deployment successful!'
+        }
+        failure {
+            // Notify on failed deployment
+            echo 'Dev deployment failed!'
+        }
+    }
+}
+```pipeline {
+    agent any
+
+    environment {
+        // Environment variables for S3 bucket and WebLogic details
+        S3_BUCKET = 'your-s3-bucket-name'
+        DEPLOY_SERVER = 'your-weblogic-server-ip'
+        DEPLOY_PATH = '/path/to/deploy/directory'
+        MAVEN_HOME = '/opt/maven'
+        ANSIBLE_PLAYBOOK = 'deploy-to-weblogic.yml'
+        INVENTORY_FILE = 'inventory.ini'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Checkout the 'dev' branch from GitHub
+                git branch: 'dev', url: 'https://github.com/your-org/your-repo.git'
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                script {
+                    // Run Maven build and unit tests
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn clean install -DskipTests
+                    '''
+                }
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    // Run JUnit tests to ensure functionality
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn test
+                    '''
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis for static code analysis
+                    sh '''#!/bin/bash
+                    ${MAVEN_HOME}/bin/mvn sonar:sonar -Dsonar.projectKey=your-project-key -Dsonar.host.url=http://your-sonarqube-server
+                    '''
+                }
+            }
+        }
+
+        stage('Store Artifacts in S3') {
+            steps {
+                script {
+                    // Upload the WAR/JAR file to S3 bucket
+                    sh '''#!/bin/bash
+                    aws s3 cp target/your-application.war s3://${S3_BUCKET}/artifacts/your-application-${BUILD_NUMBER}.war
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy to WebLogic (Dev)') {
+            steps {
+                script {
+                    // Run the Ansible playbook for deployment
+                    sh '''#!/bin/bash
+                    ansible-playbook -i ${INVENTORY_FILE} ${ANSIBLE_PLAYBOOK}
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            // Notify on successful deployment
+            echo 'Dev deployment successful!'
+        }
+        failure {
+            // Notify on failed deployment
+            echo 'Dev deployment failed!'
+        }
+    }
+}

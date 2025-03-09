@@ -8,8 +8,7 @@
 - Goes a step further than Continuous Delivery.
 - Every change that passes automated tests is automatically deployed to production without manual approval.
 
-![image](https://github.com/user-attachments/assets/44b04fd9-a71e-4a71-a092-c80e646f71c1)
-![image](https://github.com/user-attachments/assets/d390e893-2e95-48dd-8307-e81a6cc1defc)
+![image](https://github.com/user-attachments/assets/44b04fd9-a71e-4a71-a092-c80e646f71c1) ![image](https://github.com/user-attachments/assets/d390e893-2e95-48dd-8307-e81a6cc1defc)
 
 
 

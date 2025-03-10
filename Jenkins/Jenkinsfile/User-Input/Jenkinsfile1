@@ -1,0 +1,25 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+            }
+        }
+        stage('User Input') {
+            steps {
+                script {
+                    def userInput = input(message: 'Proceed to next stage?', parameters: [choice(name: 'Action', choices: ['Proceed', 'Abort'], description: 'Choose an action')])
+                    echo "User Selected ${userInput}"
+
+                    if (userInput == 'Proceed') {
+                        echo "Proceeding to Next Stage"
+                    }
+                    else {
+                        error "Pipeline Aborted by User"
+                    }
+                }
+            }
+        }
+    }
+}

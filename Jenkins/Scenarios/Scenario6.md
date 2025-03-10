@@ -1,4 +1,4 @@
-**Secrets Management**
+## Secrets Management ##
 
 Scenario: Your pipeline needs to access AWS credentials and database passwords. How would you securely manage these secrets in a CI/CD pipeline?
 

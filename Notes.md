@@ -14,6 +14,11 @@
 
 Dependency resolution is a critical step to ensure reproducibility and consistency across different environments. The approach depends on the technology stack, but in general, we follow these best practices:
 - **Using Dependency Lock Files:**
+  - *Why Do We Need Lock Files?* When we install dependencies in a project, they are downloaded from the internet. But if we don’t specify exact versions, the dependencies *can update automatically*.
+  - Example Problem (Without a Lock File):
+    - Today, you run `npm install`, and it installs *lodash v4.17.21*.
+    - Next week, another developer runs npm `install`, but lodash updated to *v4.18.0* automatically.
+    - This could break the project because the new version may have changes or bugs.
   - We rely on lock files (`package-lock.json` for Node.js, `requirements.txt` or `poetry.lock` for Python, `Gemfile.lock` for Ruby, `pom.xml` with a specific version for Maven, etc.).
   - This ensures that every CI run installs the exact *same dependency versions as in development*, avoiding inconsistencies.
 - **Caching Dependencies to Improve Performance:**
@@ -34,6 +39,13 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
           </repository>
         </repositories>
         ```
+- **Running Dependency Security & Vulnerability Scans**
+  - Security scanning tools check for *vulnerable or outdated dependencies* in CI/CD.
+  - Popular Security Tools:
+    - *Snyk* `snyk test`
+    - *Trivy (For Docker & Kubernetes)* Scans container images and dependencies for security issues.
+    - *OWASP Dependency-Check* Checks for known vulnerabilities using OWASP’s security database.
+
   
 
 

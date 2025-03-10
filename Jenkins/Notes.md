@@ -135,7 +135,8 @@ pipeline {
   - https://github.com/nawab312/CI_CD/blob/main/Jenkins/Jenkinsfile/User-Input/Jenkinsfile-2
 
 - **Using Configuration for each Environment** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario-5.md
-        
+
+- **Secrets Management** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario6.md
 
 
 

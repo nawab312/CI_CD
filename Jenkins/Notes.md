@@ -63,7 +63,28 @@ pipeline {
                   }
               }
           }
+      }
       ```
+    - **Push-Based Model (Webhook Triggers)**
+      - The SCM (GitHub, GitLab, Bitbucket, etc.) notifies Jenkins immediately when a new commit is pushed.
+      - A *Webhook* is configured in the repository (GitHub, GitLab, Bitbucket).
+      - When a developer pushes new code, the webhook sends a notification to Jenkins.
+      - Jenkins triggers the pipeline instantly.
+      ```groovy
+      pipeline {
+          agent any
+          triggers {
+        githubPush() // Jenkins triggers build when a GitHub webhook is received
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/user/repo.git'
+            }
+        }
+    }
+}
+      
 
 
 

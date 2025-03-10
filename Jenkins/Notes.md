@@ -72,19 +72,20 @@ pipeline {
       - Jenkins triggers the pipeline instantly.
       ```groovy
       pipeline {
-          agent any
-          triggers {
-        githubPush() // Jenkins triggers build when a GitHub webhook is received
-    }
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/user/repo.git'
-            }
+        agent any
+        triggers {
+          githubPush() // Jenkins triggers build when a GitHub webhook is received
         }
-    }
-}
-      
+        stages {
+          stage('Checkout Code') {
+            steps {
+              git branch: 'main', url: 'https://github.com/user/repo.git'
+            }
+          }
+        }
+      }
+      ```
+        
 
 
 

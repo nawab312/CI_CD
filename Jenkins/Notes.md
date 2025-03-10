@@ -25,6 +25,48 @@
 - **Builds not being evenly distributed across Jenkins slave nodes, and how can this imbalance be fixed in a Jenkins Master-Slave setup?** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario1.md
 - **Builds are failing on the slave nodes.** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario2.md
 
+- **Multiple Labels or Nodes**
+```groovy
+pipeline {
+    agent { label 'python || linux' }  // Run on nodes with either 'python' or 'linux'
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Running on a node with either python or linux'
+                // Build steps here
+            }
+        }
+    }
+}
+```
+
+- **Jenkins Jobs**
+  - Job is a unit of work that defines a specific build, test, and deployment process.
+
+- **Jenkins Source Code Management (SCM)**
+  - Source Code Management (SCM) in Jenkins allows the CI/CD pipeline to pull the latest version of the application code from a version control system (VCS) (Git (GitHub, GitLab, Bitbucket, AWS CodeCommit))
+  - In Jenkins Source Code Management (SCM), there are two models to trigger CI/CD pipelines:
+    - **Pull-Based Model (Polling SCM)**
+      - Jenkins periodically checks the SCM (Git, SVN, etc.) for changes and triggers a build if new commits are detected.
+      - Jenkins runs a cron job at a fixed interval to check for updates in the repository.
+      - If new commits are found, Jenkins triggers a build.
+```grrovy
+pipeline {
+    agent any
+    triggers {
+        pollSCM('H/5 * * * *')  // Check for new commits every 5 minutes
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/user/repo.git'
+            }
+        }
+    }
+}
+```
+    - **Push-Based Model (Webhook Triggers)**
+    
 
 
 

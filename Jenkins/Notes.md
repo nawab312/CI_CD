@@ -65,8 +65,7 @@ pipeline {
     }
 }
 ```
-    - **Push-Based Model (Webhook Triggers)**
-    
+sasd
 
 
 

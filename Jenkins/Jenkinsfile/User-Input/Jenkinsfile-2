@@ -1,0 +1,16 @@
+pipeline {
+    agent none  // No agent allocated during input
+    stages {
+        stage('Approval') {
+            steps {
+                input "Do you want to proceed?"
+            }
+        }
+        stage('Run on Agent') {
+            agent any  // Allocate agent only when actual work is done
+            steps {
+                // Run tasks that need the agent here
+            }
+        }
+    }
+}

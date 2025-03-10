@@ -50,22 +50,21 @@ pipeline {
       - Jenkins periodically checks the SCM (Git, SVN, etc.) for changes and triggers a build if new commits are detected.
       - Jenkins runs a cron job at a fixed interval to check for updates in the repository.
       - If new commits are found, Jenkins triggers a build.
-```grrovy
-pipeline {
-    agent any
-    triggers {
-        pollSCM('H/5 * * * *')  // Check for new commits every 5 minutes
-    }
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/user/repo.git'
-            }
-        }
-    }
-}
-```
-sasd
+      ```groovy
+      pipeline {
+          agent any
+          triggers {
+              pollSCM('H/5 * * * *')  // Check for new commits every 5 minutes
+          }
+          stages {
+              stage('Checkout Code') {
+                  steps {
+                      git branch: 'main', url: 'https://github.com/user/repo.git'
+                  }
+              }
+          }
+      ```
+
 
 
 

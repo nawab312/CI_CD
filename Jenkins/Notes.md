@@ -91,20 +91,34 @@ pipeline {
 - **Pipeline-specific variables:**
   - Variables that are defined within a specific pipeline script and can only be accessed within that pipeline. Can be defined using the def keyword or by assigning values directly.
   ```groovy
-pipelines {
-    agent any
-    environment {
-        def myString = "Hello World"
-    }
-    stages {
-        stage("Demo") {
-            steps {
-                echo "${myString}"
-            }
-        }
-    }
-}
-    ```  
+  pipelines {
+      agent any
+      environment {
+          def myString = "Hello World"
+      }
+      stages {
+          stage("Demo") {
+              steps {
+                  echo "${myString}"
+              }
+          }
+      }
+  }
+    ```
+- **Global Environment variables:**
+  - Predefined variables that provide information about the Jenkins environment, such as BUILD_NUMBER, JENKINS_URL, and WORKSPACE
+  ```groovy
+  pipeline {
+      agent any
+      stages {
+          stage('Example') {
+              steps {
+                  echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+              }
+          }
+      }
+  }
+  ```
         
 
 

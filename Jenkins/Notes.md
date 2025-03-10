@@ -86,6 +86,25 @@ pipeline {
     }
 }
 ```
+
+**Variables in Jenkins**
+- **Pipeline-specific variables:**
+  - Variables that are defined within a specific pipeline script and can only be accessed within that pipeline. Can be defined using the def keyword or by assigning values directly.
+  ```groovy
+pipelines {
+    agent any
+    environment {
+        def myString = "Hello World"
+    }
+    stages {
+        stage("Demo") {
+            steps {
+                echo "${myString}"
+            }
+        }
+    }
+}
+    ```  
         
 
 

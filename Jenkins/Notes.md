@@ -21,6 +21,8 @@
     - Type: SSH Username with Private Key.
     - Username: The SSH user for the agent machine (e.g., `ubuntu`, `jenkins)`.
     - Private Key: Paste the private key for SSH access (e.g., the content of your `~/.ssh/id_rsa file`).
+   
+- **Builds not being evenly distributed across Jenkins slave nodes, and how can this imbalance be fixed in a Jenkins Master-Slave setup?** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario1.md
 
 
 

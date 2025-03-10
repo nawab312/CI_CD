@@ -75,7 +75,8 @@ spec:
 - A **Service Mesh** like Istio provides advanced traffic management, observability, and security, which are essential for enterprise-grade CI/CD pipelines.
   - *Traffic Management & Canary Releases* Enables gradual traffic shifting between application versions using Istio VirtualServices.
   - *A/B Testing & Feature Flags* Routes specific users (e.g., premium banking customers) to a new version before full rollout. Supports header-based, cookie-based, or weight-based routing for precise control.
-  - *Security & mTLS (Mutual TLS)* Secures communication between microservices using automatic encryption (TLS). Eliminates the need for hardcoded API keys or shared secrets in CI/CD pipelines by enforcing secure, automated service-to-service authentication using mTLS, JWT, and fine-grained access policies. Example Workflow::
+  - *Security & mTLS (Mutual TLS)* Secures communication between microservices using automatic encryption (TLS). Eliminates the need for hardcoded API keys or shared secrets in CI/CD pipelines by enforcing secure, automated service-to-service authentication using mTLS, JWT, and fine-grained access policies.
+  - *Mutual TLS (mTLS) for Automatic Authentication*:
     - Service A wants to talk to Service B.
     - Instead of sending an API key, Istio automatically establishes an mTLS connection.
     - Both services verify each other's identity using Istio-issued certificates.

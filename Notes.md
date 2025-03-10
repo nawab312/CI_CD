@@ -46,6 +46,8 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
     - *Trivy (For Docker & Kubernetes)* Scans container images and dependencies for security issues.
     - *OWASP Dependency-Check* Checks for known vulnerabilities using OWASP’s security database.
 
+- **Jenkins** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Notes.md
+
 - **How to Handle Multi Environment-Specific Configurations in a CI/CD pipeline** https://github.com/nawab312/CI_CD/blob/main/Scenarios/Multi_Environment.md
 
 

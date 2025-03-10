@@ -11,7 +11,30 @@
 ![image](https://github.com/user-attachments/assets/44b04fd9-a71e-4a71-a092-c80e646f71c1) ![image](https://github.com/user-attachments/assets/d390e893-2e95-48dd-8307-e81a6cc1defc)
 
 **How do you resolve dependencies in a Continuous Integration (CI) pipeline?**
+
 Dependency resolution is a critical step to ensure reproducibility and consistency across different environments. The approach depends on the technology stack, but in general, we follow these best practices:
+- **Using Dependency Lock Files:**
+  - We rely on lock files (`package-lock.json` for Node.js, `requirements.txt` or `poetry.lock` for Python, `Gemfile.lock` for Ruby, `pom.xml` with a specific version for Maven, etc.).
+  - This ensures that every CI run installs the exact *same dependency versions as in development*, avoiding inconsistencies.
+- **Caching Dependencies to Improve Performance:**
+  - When we run a CI/CD pipeline, it often downloads the same dependencies (libraries, packages) every time. This can slow down builds. To make the process faster, we *cache dependencies*, so they don’t need to be re-downloaded in every pipeline run.
+- **Using a Centralized Package Repository**
+  - In CI/CD pipelines, dependencies (libraries, frameworks, tools) are downloaded from the internet (e.g., npm registry, Maven Central, PyPI). But this can cause problems:
+    - External Failures → If the internet is down or the public repository is unavailable, builds fail.
+    - Security Risks → Public dependencies may contain vulnerabilities.
+    - Slow Builds → Downloading dependencies every time increases build time.
+  - *Solution: Use a Centralized Package Repository*: Instead of downloading dependencies directly from the internet, companies host their own internal repository using tools like: Nexus, JFrog Artifactory
+    - Example: Using an Internal Repository:
+      - For Maven (Java projects): Instead of downloading from Maven Central, we use an internal repository. This tells Maven to fetch dependencies from the internal Nexus/Artifactory repo instead of public sources.
+        ```xml
+        <repositories>
+          <repository>
+            <id>internal-repo</id>
+            <url>https://nexus.mycompany.com/repository/maven-public/</url>
+          </repository>
+        </repositories>
+        ```
+  
 
 
 

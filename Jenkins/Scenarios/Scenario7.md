@@ -3,7 +3,7 @@ Your team is using Jenkins for CI/CD, and you notice that a specific job sometim
 - How would you go about debugging and permanently fixing it?
 
 ### Solution ###
-- The issue described relates to CI/CD dependency resolution and build consistency.
+- The issue described relates to **CI/CD dependency resolution and build consistency**.
 - In continuous integration pipelines, dependencies are often fetched dynamically from *package repositories, caches, or artifact stores*.
 - If dependency versions are not locked properly or there are issues with caching, builds can become non-deterministic, leading to intermittent failures.
 

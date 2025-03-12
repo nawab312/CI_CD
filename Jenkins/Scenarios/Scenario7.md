@@ -86,3 +86,99 @@ stage('Build & Test') {
   "lodash": "4.17.21"
 }
 ```
+
+**Race Conditions in Dependency Fetching**
+- A *race condition* occurs when multiple Jenkins builds run *in parallel* and try to *fetch, modify, or upload dependencies* in a shared artifact repository (like Nexus, Artifactory, or a shared NPM registry). This can cause:
+  - *Corrupt or inconsistent dependencies:* If one build uploads a new version while another is downloading the previous one.
+- Example: Race Condition in a Jenkins Pipeline (Maven Build)
+  - Jenkins has two parallel jobs:
+    - *Job A* is building and deploying `my-library-1.0.0.jar` to Artifactory.
+    - *Job B* is running tests and fetching `my-library-1.0.0.jar` from the same repository.
+  - Race Condition:
+    - *Job A* uploads a new version while *Job B* is still fetching it.
+    - *Job B* may get a corrupt or incomplete artifact, leading to build failures.
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Parallel Build & Fetch') {
+            parallel {
+                stage('Build and Deploy') {
+                    steps {
+                        sh './mvnw clean package'
+                        sh './mvnw deploy'  // Uploads artifact to Nexus/Artifactory
+                    }
+                }
+                stage('Fetch Dependency') {
+                    steps {
+                        sh './mvnw dependency:resolve'  // Fetches dependencies
+                        sh './mvnw test'
+                    }
+                }
+            }
+        }
+    }
+}
+```
+- What Can Go Wrong?
+  - Job A uploads `my-library-1.0.0.jar` while Job B is still fetching it.
+  - Job B might:
+    - Fetch a partially uploaded/corrupt JAR.
+   
+**Unstable Remote Repositories in Jenkins Pipeline**
+- When your Jenkins build fetches dependencies from external repositories like Maven Central, PyPI, or npm, there is always a risk that:
+  - The remote repository is down (e.g., Maven Central is temporarily unavailable).
+  - Packages are removed or changed (dependency version no longer exists).
+
+Jenkins Pipeline (Maven Build with External Dependencies)
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh './mvnw clean package'
+            }
+        }
+    }
+}
+```
+If Maven Central is down or has connectivity issues, you might see an error like:
+```bash
+[ERROR] Failed to resolve dependencies for project com.example:myapp:jar:1.0
+[ERROR] Could not transfer artifact org.springframework.boot:spring-boot-starter:jar:2.7.0
+[ERROR] Connection refused: connect
+```
+
+- *How to Prevent Failures Due to Unstable Remote Repositories*
+- Use a Local Cache (`.m2` for Maven, `npm ci`, `pip cache`): Instead of fetching dependencies from remote repositories every time, cache them locally.
+  - Below Jenkinsfile  forces Maven to *use locally cached dependencies* instead of fetching new ones.
+```groovy
+pipeline {
+    agent any
+    environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=/home/jenkins/.m2/repository"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh './mvnw clean package --offline' #The dependencies must have been downloaded at least once before using --offline.
+            }
+        }
+    }
+}
+```
+
+- Set Up an Internal Proxy Repository (Nexus/Artifactory)
+  - Instead of relying on Maven Central, PyPI, or npm directly, set up a proxy repository (e.g., Nexus or JFrog Artifactory)
+  - If Maven Central goes down, your builds still work because the proxy has cached copies of dependencies. Faster builds as dependencies are fetched from a local proxy instead of the internet.
+  - Change `pom.xml` to Use a Nexus Proxy
+```xml
+<repositories>
+    <repository>
+        <id>nexus-proxy</id>
+        <url>http://nexus.example.com/repository/maven-central/</url>
+    </repository>
+</repositories>
+```
+

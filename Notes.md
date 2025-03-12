@@ -12,6 +12,8 @@
 
 **How do you resolve dependencies in a Continuous Integration (CI) pipeline?**
 
+- CI/CD dependency resolution and build consistency: https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario7.md
+
 Dependency resolution is a critical step to ensure reproducibility and consistency across different environments. The approach depends on the technology stack, but in general, we follow these best practices:
 - **Using Dependency Lock Files:**
   - *Why Do We Need Lock Files?* When we install dependencies in a project, they are downloaded from the internet. But if we don’t specify exact versions, the dependencies *can update automatically*.

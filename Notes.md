@@ -54,4 +54,6 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
 
 - **Zero-Downtime Deployment for a Kubernetes App** https://github.com/nawab312/CI_CD/blob/main/Scenarios/Zero-Downtime%20_Deployment_for_Kubernetes_App.md
 
+- **Sonarqube** https://github.com/nawab312/CI_CD/blob/main/SonarQube/Notes.md
+
 

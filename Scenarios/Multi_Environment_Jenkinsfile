@@ -1,0 +1,184 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = "git@github.com:your-org/your-repo.git"
+        BRANCH = "{env.GIT_BRANCH}"  // Change based on pipeline trigger
+        S3_BUCKET = "s3://your-artifact-bucket"
+        ARTIFACT_NAME = "myapp.jar"
+        APP_DIR = "/opt/myapp"
+        DEV_SERVER = "ec2-user@dev-instance-ip"
+        STAGING_SERVER = "ec2-user@staging-instance-ip"
+        PROD_SERVER = "ec2-user@prod-instance-ip"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    git branch: "$BRANCH", url: "$GIT_REPO"
+                }
+            }
+        }
+
+        stage('Linting & Static Analysis') {
+            steps {
+                script {
+                    sh 'mvn checkstyle:check'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=myapp'
+                }
+            }
+        }
+
+        stage('Unit Tests') {
+            steps {
+                script {
+                    sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Build & Package') {
+            steps {
+                script {
+                    sh 'mvn clean package -DskipTests'
+                    sh 'mv target/*.jar $ARTIFACT_NAME'
+                }
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                script {
+                    sh "aws s3 cp $ARTIFACT_NAME $S3_BUCKET/$BRANCH/$ARTIFACT_NAME"
+                }
+            }
+        }
+
+        stage('Deploy to Dev') {
+            when {
+                expression { env.GET_BRANCH == 'develop' }
+            }
+            steps {
+                script {
+                    sh """
+                    ssh $DEV_SERVER "aws s3 cp $S3_BUCKET/develop/$ARTIFACT_NAME $APP_DIR/"
+                    ssh $DEV_SERVER "sudo systemctl restart myapp"
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when {
+                express { env.GET_BRANCH == 'staging' }
+            }
+            steps {
+                script {
+                    sh """
+                    ssh $STAGING_SERVER "aws s3 cp $S3_BUCKET/staging/$ARTIFACT_NAME $APP_DIR/"
+                    ssh $STAGING_SERVER "sudo systemctl restart myapp"
+                    """
+                }
+            }
+        }
+
+        stage('Integration and End to End Testing') {
+            when {
+                expression { env.GET_BRANCH == 'staging' }
+            }
+            steps {
+                script {
+                    sh '''
+                    echo "Running API Testing with Postman..."
+                    echo "Running UI Testing using Selenium..."
+                    '''
+                }
+            }
+        }
+
+        stage('Performan Load Testing') {
+            when {
+                expression { env.GET_BRANCH == 'staging' }
+            }
+            steps {
+                script {
+                    sh '''
+                    echo "Running Load Test with JMeter..."
+                    '''
+                }
+            }
+        }
+
+        stage('Security Scanning') {
+            when {
+                expression { env.GET_BRANCH == 'staging' }
+            }
+            steps {
+                script {
+                    sh '''
+                    echo "Running OWASP ZAP Scan"
+                    echo "Running Trivy Security Scan"
+                    '''
+                }
+            }
+        }
+
+        stage('Approval for Production') {
+            when {
+                expression { env.GET_BRANCH == 'staging' }
+            }
+            input {
+                message "Deploy to Production?"
+                ok "Proceed"
+            }
+        }
+
+        stage('Merge to Production Branch') {
+            when {
+                expression { env.GET_BRANCH == 'staging' }
+            }
+            steps {
+                sh '''
+                git checkout main
+                git merge staging
+                git push origin main
+                '''
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                expression { env.GET_BRANCH == 'main' }
+            }
+            steps {
+                script {
+                    sh """
+                    ssh $PROD_SERVER "aws s3 cp $S3_BUCKET/main/$ARTIFACT_NAME $APP_DIR/"
+                    ssh $PROD_SERVER "sudo systemctl restart myapp"
+                    """
+                }
+            }
+        }
+
+        stage('Post-Deployment Monitoring') {
+            steps {
+                script {
+                    sh """
+                    ssh $PROD_SERVER "systemctl status myapp"
+                    ssh $PROD_SERVER "tail -n 50 $APP_DIR/logs/app.log"
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment successful!"
+        }
+        failure {
+            echo "Deployment failed!"
+        }
+    }
+}

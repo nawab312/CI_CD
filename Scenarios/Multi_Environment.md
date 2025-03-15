@@ -2,6 +2,21 @@
 
 ### Source Code Management (SCM) Strategy ###
 - Use **GitFlow branching strategy** (e.g., `feature`, `develop`, `staging`, `main`)
+
+```bash
+main
+│
+├── develop (for Dev environment)
+│   ├── feature/feature-1
+│   ├── feature/feature-2
+│   ├── bugfix/bugfix-1
+│   ├── bugfix/bugfix-2
+│
+├── release (for Staging environment)
+│
+└── hotfix/hotfix-1 (for urgent production fixes)
+```
+
 - **Feature Branches (`feature/*`)**
   - Who works here? Developers working on new features.
   - Naming Convention: `feature/new-login-ui`, `feature/add-cart-api`.

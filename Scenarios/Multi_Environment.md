@@ -52,28 +52,20 @@ main
 
 ### CI Pipeline (Build & Test in Dev) ###
 - This CI pipeline is triggered on every commit to the `develop` branch and consists of:
-  - **Linting & Static Analysis** → Detect code issues early
-    - Ensures code follows coding standards.
-    - Detects security vulnerabilities & bad practices.
-    - Tools: SonarQube (Full static analysis), Pylint (Python), Checkstyle (Java), SAST (Security Analysis with OWASP Dependency Check)
+  - **Linting & Static Analysis**
+    - *Linting* checks if the code follows certain rules or *"coding standards"* (like naming conventions or formatting), making it easier for the team to understand and maintain the code.
+    - *Static analysis* looks at the code for any problems without actually running it, such as bugs, security vulnerabilities, or bad practices.
+    - Tools: SonarQube (Full Static Analysis),  Checkstyle (Java Code Linting Test)
   ```
   # Java: Run Checkstyle & SonarQube
   mvn checkstyle:check
   mvn sonar:sonar -Dsonar.projectKey=myapp
-  # JavaScript: Run ESLint
-  eslint src/
-  # Python: Run Pylint
-  pylint my_project/
   ```
   - **Unit Tests** → Unit tests are a type of software testing where individual components or units of code, such as functions or methods, are tested in isolation to ensure they work as expected. The primary goal of unit testing is to validate that each unit of the software performs correctly under various conditions. Unit tests are typically executed before the build in a CI pipeline for a few reasons *although this is not always the case*.
     - Unit tests are executed before the build in a CI pipeline to catch errors early, ensuring only code that passes basic functionality checks moves forward to the more resource-intensive build and deployment steps. This saves time and resources by preventing unnecessary builds when tests fail.
   ```
   # Java: Run JUnit Tests
   mvn test
-  # JavaScript: Run Jest Tests
-  npm test
-  # Python: Run PyTest
-  pytest --cov=my_project
   ```
   - **Build Artifacts** → Create deployable binaries
     - Converts source code into a deployable package.
@@ -81,23 +73,18 @@ main
     - Tools: Maven/Gradle (for Java .jar/.war builds), Docker (for containerized apps)
   ```
   # Java: Build a .jar file using Maven
-  mvn clean package
-  # Java: Build a .war file using Gradle
-  gradle build
-  # Node.js: Build an optimized app
-  npm run build
-  # Docker: Build a container image
-  docker build -t myapp:latest .
+  mvn clean package -DskipTests # -DskipTests: This is a system property passed to Maven that tells Maven to skip running unit tests during the build phase.
   ```
   - **Package & Push to Repository** → Store build outputs for deployment
     - Stores the built artifacts for later use in CD pipelines.
     - Docker Images → Pushed to DockerHub or AWS ECR.
-    - JAR/WAR Files → Pushed to Nexus, JFrog Artifactory.
+    - JAR/WAR Files → Pushed to Nexus, JFrog Artifactory, S3.
+
+### Deployment to Dev in CI/CD ###
 
 ### Deployment to Staging (Automated Testing & Approval) in CI/CD ###
 The staging environment is a pre-production space where the application is deployed and tested before it moves to production. Simulates a real-world production environment. Runs integration, performance, and security tests. Ensures stability, security, and reliability before going live. Requires manual or automated approval before production deployment. Once code is merged into the `staging` branch, the following steps occur:
 - **Deploy to Staging Environment**
-  - Example: ```bash helm upgrade --install myapp ./helm-chart --namespace staging```
 - **Integration & End-to-End (E2E) Tests**
   - Ensures different modules work together correctly. Simulates real user interactions.
   - Tools: Selenium (Automated UI Testing), Postman/Newman (API Testing)

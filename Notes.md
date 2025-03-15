@@ -50,7 +50,7 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
 
 - **Jenkins** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Notes.md
 
-- **HMulti-Environment CI/CD Pipeline with Jenkins (GITFLOW  BRANCHING STRATERGY)** https://github.com/nawab312/CI_CD/blob/main/Scenarios/Multi_Environment.md
+- **Multi-Environment CI/CD Pipeline with Jenkins (GITFLOW  BRANCHING STRATERGY)** https://github.com/nawab312/CI_CD/blob/main/Scenarios/Multi_Environment.md
 
 - **Zero-Downtime Deployment for a Kubernetes App** https://github.com/nawab312/CI_CD/blob/main/Scenarios/Zero-Downtime%20_Deployment_for_Kubernetes_App.md
 

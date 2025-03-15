@@ -1,5 +1,7 @@
 **Scenario:** Your company has *Dev*, *Staging*, and *Production* environments. How would you design a CI/CD pipeline that ensures proper testing before code reaches production?
 
+- Jenkinsfile https://github.com/nawab312/CI_CD/blob/main/Scenarios/Multi_Environment_Jenkinsfile
+
 ### Source Code Management (SCM) Strategy ###
 - Use **GitFlow branching strategy** (e.g., `feature`, `develop`, `staging`, `main`)
 

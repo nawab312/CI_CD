@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GIT_REPO = "git@github.com:your-org/your-repo.git"
-        BRANCH = "{env.GIT_BRANCH}"  // Change based on pipeline trigger
+        BRANCH = "${env.GIT_BRANCH}"  // Set dynamically from Jenkins
         S3_BUCKET = "s3://your-artifact-bucket"
         ARTIFACT_NAME = "myapp.jar"
         APP_DIR = "/opt/myapp"
@@ -57,7 +57,7 @@ pipeline {
 
         stage('Deploy to Dev') {
             when {
-                expression { env.GET_BRANCH == 'develop' }
+                expression { env.BRANCH == 'develop' }
             }
             steps {
                 script {
@@ -69,9 +69,24 @@ pipeline {
             }
         }
 
+        stage('Merge Develop into Staging') {
+            when {
+                expression { env.BRANCH == 'develop' }
+            }
+            steps {
+                script {
+                    sh '''
+                    git checkout staging
+                    git merge develop
+                    git push origin staging
+                    '''
+                }
+            }
+        }
+
         stage('Deploy to Staging') {
             when {
-                express { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             steps {
                 script {
@@ -85,7 +100,7 @@ pipeline {
 
         stage('Integration and End to End Testing') {
             when {
-                expression { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             steps {
                 script {
@@ -97,9 +112,9 @@ pipeline {
             }
         }
 
-        stage('Performan Load Testing') {
+        stage('Performance Load Testing') {
             when {
-                expression { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             steps {
                 script {
@@ -112,7 +127,7 @@ pipeline {
 
         stage('Security Scanning') {
             when {
-                expression { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             steps {
                 script {
@@ -126,7 +141,7 @@ pipeline {
 
         stage('Approval for Production') {
             when {
-                expression { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             input {
                 message "Deploy to Production?"
@@ -136,7 +151,7 @@ pipeline {
 
         stage('Merge to Production Branch') {
             when {
-                expression { env.GET_BRANCH == 'staging' }
+                expression { env.BRANCH == 'staging' }
             }
             steps {
                 sh '''
@@ -149,7 +164,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                expression { env.GET_BRANCH == 'main' }
+                expression { env.BRANCH == 'main' }
             }
             steps {
                 script {

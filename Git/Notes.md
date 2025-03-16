@@ -118,4 +118,20 @@
         git rebase --abort
         ```If needed, abort the rebase:
 
+  - **git cherry-pick** is a Git command used to apply a specific commit from one branch to another. Instead of merging or rebasing, it allows you to pick a single commit and apply it to the current branch. This is useful when you need to transfer a bug fix or a feature from one branch without merging all changes.
+    - *Basic Cherry-Pick* To apply a specific commit to the current branch. This applies commit `a1b2c3d` to the branch you are currently on.
+      ```bash
+      git cherry-pick <commit-hash>
+      ```
+    - *Cherry-Pick a Range of Commits* To apply all commits in a range (excluding the first commit). This applies all commits from `a1b2c3d` to `f4e5d6a`.
+      ```bash
+      git cherry-pick a1b2c3d^..f4e5d6a
+      ```
+      ```bash
+      git cherry-pick c2 c4
+      ```
+      ![image](https://github.com/user-attachments/assets/21542158-f16d-471a-875e-36d2ef344be7)
+
+      
+
 

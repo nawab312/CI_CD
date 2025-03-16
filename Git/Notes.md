@@ -64,3 +64,28 @@
     git diff <commit1> <commit2> -- filename.txt
     ```
 
+- **git stash** is a Git command used to temporarily save uncommitted changes in a repository without committing them. This allows you to switch branches or work on something else without losing your modifications. The stashed changes can be reapplied later.
+  - To save your uncommitted changes:
+    ```bash
+    git stash
+    ```
+  - Listing Stashed Changes
+    ```
+    git stash list
+    ```
+  - Applying Stashed Changes
+    ```bash
+    git stash apply #To apply the most recent stash
+    git stash apply stash@{1} #To apply a specific stash
+    ```
+  - To apply and delete the latest stash:
+    ```bash
+    git stash pop
+    ```
+  - Use Cases of git stash:
+    - *Switching Branches Without Committing* – You need to switch branches but don’t want to commit unfinished work.
+    - *Temporary Save for Testing* – You want to test something but keep current progress safe.
+
+ 
+
+

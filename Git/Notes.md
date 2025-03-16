@@ -86,6 +86,13 @@
     - *Switching Branches Without Committing* – You need to switch branches but don’t want to commit unfinished work.
     - *Temporary Save for Testing* – You want to test something but keep current progress safe.
 
- 
+ - **git rebase** is a command used to move or combine commits from one branch onto another(base, eg: laterst `main` branch). It helps maintain a clean and linear project history by applying your changes on top of the latest branch updates.
+   ```bash
+   git checkout feature
+   git rebase main
+   ```
+
+   ![image](https://github.com/user-attachments/assets/789ac0de-563b-4854-a053-55ecc2008caa)
+
 
 

@@ -187,6 +187,27 @@ Your CI/CD pipeline is failing after merging a feature branch into `main`. The e
     git rebase main
     ```
 
+### Scenario 3: Rolling Back a Broken Deployment ###
+Your team deployed a faulty release to production. The issue was introduced by commit `abc123`.
+- How do you roll back production to the last stable commit?
+- How do you fix and re-deploy correctly?
+
+**Answer**
+- Identify the last stable commit:
+  ```bash
+  git log --oneline
+  ```
+- Option 1: Reset to last stable commit (if not pushed)
+  ```bash
+  git reset --hard <stable-commit-hash>
+  gut push --force origin main
+  ```
+- Option 2: Revert (safer if already pushed)
+  ```bash
+  git revert abc123
+  git push origin main
+  ```
+- Fix the issue, test, and redeploy.
       
 
 

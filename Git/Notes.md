@@ -86,13 +86,36 @@
     - *Switching Branches Without Committing* – You need to switch branches but don’t want to commit unfinished work.
     - *Temporary Save for Testing* – You want to test something but keep current progress safe.
 
- - **git rebase** is a command used to move or combine commits from one branch onto another(base, eg: laterst `main` branch). It helps maintain a clean and linear project history by applying your changes on top of the latest branch updates.
-   ```bash
-   git checkout feature
-   git rebase main
-   ```
-
-   ![image](https://github.com/user-attachments/assets/789ac0de-563b-4854-a053-55ecc2008caa)
-
+ - **git rebase** is a Git command used to *move* or "replay" commits from one branch onto another. It is often used to maintain a cleaner Git history by incorporating upstream changes without creating unnecessary merge commits.
+   - **Types of Rebasing**
+     - Basic Rebase (`git rebase <base-branch>`) Moves the current branch to start from the latest state of another branch.
+       - Example: You are working on `feature-branch` but `main` has new updates. Instead of merging, you can rebase:
+         ```bash
+         git checkout feature-branch
+         git rebase main
+         ```
+      ![image](https://github.com/user-attachments/assets/789ac0de-563b-4854-a053-55ecc2008caa)
+    - Interactive Rebase (`git rebase -i`) Allows you to modify, reorder, squash, or drop commits before applying them.
+      ```bash
+      git rebase -i HEAD~3
+      ```
+      This opens an editor to modify the last 3 commits. Common options in interactive rebase:
+      - `pick` – Keep the commit as is.
+      - `reword` – Change the commit message.
+      - `squash` – Merge multiple commits into one.
+      - `drop` – Remove a commit.
+  - **Handling Rebase Conflicts**
+    - If a conflict occurs:
+      - Git will pause and show the conflicting files.
+      - Manually fix the conflicts.
+      - Use `git add <fixed-file>` to mark them as resolved.
+      - Continue rebasing with:
+        ```bash
+        git rebase --continue
+        ```
+      - If needed, abort the rebase:
+        ```bash
+        git rebase --abort
+        ```If needed, abort the rebase:
 
 

@@ -42,10 +42,25 @@
   git clone https://github.com/user/repo.git my-project # This clones the repository into a folder named my-project.
   ```
 
-  ![image](https://github.com/user-attachments/assets/66c19dbe-7626-4e59-9fd7-9eae5b597942)
+![image](https://github.com/user-attachments/assets/66c19dbe-7626-4e59-9fd7-9eae5b597942)
 
-  - **git diff** is a Git command used to compare differences between two versions of a file, branch, commit, or the working directory. It helps track changes before committing them
-    - Checking Staged Changes
-      - To see differences between the staging area and the last commit (i.e., what is ready to be committed): ```bash git diff --staged```
-
+- **git diff** is a Git command used to compare differences between two versions of a file, branch, commit, or the working directory. It helps track changes before committing them
+  - Checking Staged Changes:
+    - To see differences between the staging area and the last commit (i.e., what is ready to be committed):
+      ```bash
+      git diff --staged
+      git diff --cached
+      ```
+  - Comparing Two Commits:
+    ```bash
+    git diff abc123 def456
+    ```
+  - Comparing a Branch with Another
+    ```bash
+    git diff main feature-branch
+    ```
+  - Comparing a File Between Two Commits
+    ```bash
+    git diff <commit1> <commit2> -- filename.txt
+    ```
 

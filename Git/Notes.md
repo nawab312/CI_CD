@@ -132,6 +132,61 @@
       ```
       ![image](https://github.com/user-attachments/assets/21542158-f16d-471a-875e-36d2ef344be7)
 
+## Scenarios ##
+
+### Scenario 1: Hotfix Deployment in Production ###
+Your team follows a **Git Flow** workflow, where the `main` branch is used for production and `develop` is for ongoing work. A **critical bug** is reported in production. You have fixed the issue in a hotfix branch (`hotfix-123`).
+- How do you ensure this fix is deployed quickly without disrupting ongoing development?
+- How do you merge the fix into `main` and ensure it's also in `develop`?
+
+**Answer**
+-  Create a hotfix branch from `main`:
+  ```bash
+  git checkout main
+  git pull origin main
+  git checkout -b hotfix-123
+  ```
+- Fix the issue and commit it:
+  ```bash
+  git commit -am "Hotfix: Critical Bug Fix"
+  git push origin hotfix-123
+  ```
+- Merge into `main` and deploy
+  ```bash
+  git checkout main
+  git merge hotfix-123
+  git push origin main
+  ```
+- Ensure `develop` also gets it
+  ```bash
+  git checkout develop
+  git merge hotfix-123
+  git push origin develop
+  ```
+
+### Scenario 2: CI/CD Fails Due to Merge Conflict ###
+Your CI/CD pipeline is failing after merging a feature branch into `main`. The error log shows **merge conflicts** in `config.yml`.
+- How do you resolve this issue?
+- What Git strategies can you use to prevent such conflicts in the future?
+
+**Answer**
+- Identify the Conflict using
+  ```bash
+  git status
+  ```
+- Open `config.yml`, manually resolve the conflict, and mark it as resolved:
+  ```bash
+  git add config.yml
+  git commit -m "Resolved merge conflict in config.yml"
+  git push origin main
+  ```
+- Prevent future conflicts by:
+  - Enforcing *feature branch rebasing* before merging:
+    ```bash
+    git checkout feature-branch
+    git rebase main
+    ```
+
       
 
 

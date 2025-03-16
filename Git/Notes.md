@@ -32,3 +32,20 @@
   ```bash
   git pull origin main #Fetches and merges changes from the main branch of the origin remote repository.
   ```
+
+- **git clone** is a command used to *copy* a remote Git repository to your local machine.
+  - It *downloads* the entire repository, including all branches and commit history.
+  - It *automatically sets up a remote connection* (typically named `origin`).
+  - Useful for getting a fresh copy of a project for development.
+  ```bash
+  git clone https://github.com/user/repo.git # This creates a local copy of repo.git.
+  git clone https://github.com/user/repo.git my-project # This clones the repository into a folder named my-project.
+  ```
+
+  ![image](https://github.com/user-attachments/assets/66c19dbe-7626-4e59-9fd7-9eae5b597942)
+
+  - **git diff** is a Git command used to compare differences between two versions of a file, branch, commit, or the working directory. It helps track changes before committing them
+    - Checking Staged Changes
+      - To see differences between the staging area and the last commit (i.e., what is ready to be committed): ```bash git diff --staged```
+
+

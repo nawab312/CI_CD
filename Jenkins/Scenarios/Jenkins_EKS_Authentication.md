@@ -7,6 +7,13 @@ The authentication process involves:
 - Mapping IAM roles to Kubernetes RBAC using `aws-auth` ConfigMap
 - Using `kubectl` to interact with the cluster
 
+### Workflow: How IAM + RBAC Work Together ###
+- Jenkins (running on EC2) runs `kubectl apply -f deployment.yaml`.
+- AWS IAM validates Jenkins' identity using `aws-iam-authenticator`.
+- IAM role (`JenkinsEKSRole`) is mapped to Kubernetes user (`jenkins`) via `aws-auth ConfigMap`.
+- Kubernetes RBAC checks if `jenkins` has permission to deploy applications.
+- If authorized, Jenkins successfully deploys to EKS.
+
 ### IAM Authentication in EKS ###
 Unlike a typical Kubernetes cluster where users authenticate using certificates, **EKS relies on AWS IAM and tokens**.
 - IAM users or roles do **not** have direct access to Kubernetes.
@@ -21,7 +28,37 @@ Unlike a typical Kubernetes cluster where users authenticate using certificates,
 **Attach the Role to Jenkins EC2 Instance**
 - Attach the IAM role to the EC2 instance running Jenkins.
 
-**Update `aws-auth` ConfigMap in EKS**
+**Authentication Flow**
+- Request Authentication Token
+  - The `kubectl` command triggers a request to authenticate with EKS.
+  - `kubectl` runs `aws eks get-token`, which fetches a temporary authentication token.
+    ```bash
+    aws eks get-token --cluster-name my-eks-cluster
+    ```
+- IAM Role Validation
+  - AWS checks if the user or role has `eks:GetToken` permissions in IAM.
+  - If authorized, AWS generates a short-lived authentication token.
+- Using the Token in `kubeconfig`
+  - The token is stored in the `kubeconfig` file, allowing `kubectl` to use it for cluster access.
+  - Example `kubeconfig` entry:
+    ```yaml
+    users:
+    - name: eks-user
+      user:
+        exec:
+          apiVersion: client.authentication.k8s.io/v1beta1
+          command: aws
+          args:
+            - eks
+            - get-token
+            - --cluster-name
+            - my-eks-cluster
+    ```
+
+### IAM + Kubernetes RBAC (Authorization) ###
+Once authentication is successful, Kubernetes **checks authorization** using **RBAC policies**. This ensures that IAM users/roles can only perform allowed actions.
+
+**How IAM Roles Are Mapped to Kubernetes Users?**
 - The `aws-auth` ConfigMap is a critical Kubernetes configuration in Amazon EKS that *maps AWS IAM identities (users, roles, or instance profiles) to Kubernetes RBAC roles and groups*.
 - This allows AWS IAM users or roles to authenticate and interact with the Kubernetes cluster.
 - ```bash
@@ -52,5 +89,37 @@ Unlike a typical Kubernetes cluster where users authenticate using certificates,
       - "123456789012"
   ```
 
-**Configure Jenkins to Use AWS CLI for Authentication**
-- Use `aws eks update-kubeconfig --region <region> --name <cluster-name>` inside the Jenkins pipeline to generate the `kubeconfig` file dynamically.
+### Defining Kubernetes RBAC Permissions ###
+Once mapped, Kubernetes **RBAC roles** determine what actions Jenkins can perform.
+
+**Create a Kubernetes Role for Jenkins**
+- Instead of giving full `system:masters` access, create a restricted role:
+  ```yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    namespace: default
+    name: jenkins-deployer
+  rules:
+  - apiGroups: [""]
+    resources: ["pods", "deployments", "services"]
+    verbs: ["get", "list", "create", "update", "delete"]
+  ```
+- Bind the Role to Jenkins IAM Role
+  ```yaml
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: jenkins-deployer-binding
+    namespace: default
+  subjects:
+  - kind: User
+    name: jenkins
+    apiGroup: rbac.authorization.k8s.io
+  roleRef:
+    kind: Role
+    name: jenkins-deployer
+    apiGroup: rbac.authorization.k8s.io
+  ```
+- This ensures that *Jenkins (mapped IAM Role)* can only manage deployments, pods, and services in the `default` namespace.
+   

@@ -121,5 +121,18 @@ Once mapped, Kubernetes **RBAC roles** determine what actions Jenkins can perfor
     name: jenkins-deployer
     apiGroup: rbac.authorization.k8s.io
   ```
+- Modify the aws-auth ConfigMap as follows:
+  ```yaml
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: aws-auth
+    namespace: kube-system
+  data:
+    mapRoles: |
+      - rolearn: arn:aws:iam::123456789012:role/JenkinsEKSRole
+        username: jenkins
+  ```
+
 - This ensures that *Jenkins (mapped IAM Role)* can only manage deployments, pods, and services in the `default` namespace.
    

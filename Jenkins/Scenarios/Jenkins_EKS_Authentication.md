@@ -43,7 +43,7 @@ Unlike a typical Kubernetes cluster where users authenticate using certificates,
   - Example `kubeconfig` entry:
     ```yaml
     users:
-    - name: eks-user
+    - name: jenkins
       user:
         exec:
           apiVersion: client.authentication.k8s.io/v1beta1

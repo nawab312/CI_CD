@@ -138,6 +138,8 @@ pipeline {
 
 - **Secrets Management** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario6.md
 
+- **Jenkins On EC2 Authenticating with EKS** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Jenkins_EKS_Authentication.md
+
 
 
 

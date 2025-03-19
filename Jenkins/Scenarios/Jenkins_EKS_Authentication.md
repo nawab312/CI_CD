@@ -113,8 +113,8 @@ Once mapped, Kubernetes **RBAC roles** determine what actions Jenkins can perfor
     name: jenkins-deployer-binding
     namespace: default
   subjects:
-  - kind: User
-    name: jenkins
+  - kind: Group
+    name: jenkins-deployer-group
     apiGroup: rbac.authorization.k8s.io
   roleRef:
     kind: Role
@@ -132,6 +132,8 @@ Once mapped, Kubernetes **RBAC roles** determine what actions Jenkins can perfor
     mapRoles: |
       - rolearn: arn:aws:iam::123456789012:role/JenkinsEKSRole
         username: jenkins
+        groups:
+          - jenkins-deployer-group
   ```
 
 - This ensures that *Jenkins (mapped IAM Role)* can only manage deployments, pods, and services in the `default` namespace.

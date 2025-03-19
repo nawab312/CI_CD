@@ -1,16 +1,22 @@
 ## How Jenkins on EC2 Authenticates to an AWS EKS Cluster ##
-In an industry-standard setup, Jenkins running on an EC2 instance typically authenticates to an EKS cluster using AWS IAM roles and **IAM authentication for Kubernetes (IAM for Service Accounts - IRSA or IAM instance roles)**.
+In Amazon EKS, **IAM authentication** is used to securely authenticate AWS users, roles, or applications (like Jenkins) with the Kubernetes cluster. However, IAM **only handles authentication, not authorization**. Authorization is managed using **Kubernetes RBAC (Role-Based Access Control)**, which defines what actions are allowed.
 
-### 1. IAM Role-Based Authentication (Recommended) ###
-The most secure and scalable way is using an **IAM Role with EC2 Instance Profile**. This allows Jenkins to assume an IAM role that has permissions to interact with EKS.
+The authentication process involves:
+- AWS IAM authentication via `aws-iam-authenticator`
+- Generating a temporary authentication token (`eks:GetToken`)
+- Mapping IAM roles to Kubernetes RBAC using `aws-auth` ConfigMap
+- Using `kubectl` to interact with the cluster
 
-**Steps:**
+### IAM Authentication in EKS ###
+Unlike a typical Kubernetes cluster where users authenticate using certificates, **EKS relies on AWS IAM and tokens**.
+- IAM users or roles do **not** have direct access to Kubernetes.
+- Instead, IAM roles are mapped to Kubernetes users via the `aws-auth` ConfigMap.
+- AWS provides an authentication mechanism called `aws-iam-authenticator`, which validates IAM identities before granting access.
 
 **Create an IAM Role for Jenkins EC2**
 - If Jenkins needs to *deploy applications* to an EKS cluster, it requires additional permissions beyond just authentication. Below is the industry-standard IAM policy that provides Jenkins the necessary permissions for deployment.
 
 ![image](https://github.com/user-attachments/assets/a880b69b-e6bf-4adf-b473-d059594d8b9f)
-
 
 **Attach the Role to Jenkins EC2 Instance**
 - Attach the IAM role to the EC2 instance running Jenkins.

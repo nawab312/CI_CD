@@ -70,7 +70,7 @@ pipeline {
 ### Where to Use ###
 
 **If you want to skip multiple stages at once, use a String parameter and split it into a list.**
-```groovy``
+```groovy
 pipeline {
     agent any
     parameters {

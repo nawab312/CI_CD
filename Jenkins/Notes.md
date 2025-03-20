@@ -125,7 +125,7 @@ pipeline {
   }
   ```
 
-- **Selectively execute specific stages based on a user-provided parameter** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scneario3.md
+- **Pass Values Dynamically To Jenkins** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Parameters.md
  
 - **Create a Pipeline with Parameters** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario4.md
  

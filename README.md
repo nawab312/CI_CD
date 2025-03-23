@@ -56,4 +56,9 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
 
 - **Sonarqube** https://github.com/nawab312/CI_CD/blob/main/SonarQube/Notes.md
 
+### CI/CD Pipeline Troubleshooting & Debugging ###
+- **Debugging Failed Builds**
+- **Fixing Deployment Issues**
+- **Handling CI/CD Pipeline Failures**
+
 

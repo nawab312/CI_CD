@@ -1,0 +1,1 @@
+To implement a CI/CD pipeline in Jenkins for a Terraform-based infrastructure deployment, we’ll ensure that the pipeline includes key stages such as linting, security scanning, plan approval, and automatic deployment on approval.

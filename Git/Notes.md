@@ -132,6 +132,31 @@
       ```
       ![image](https://github.com/user-attachments/assets/21542158-f16d-471a-875e-36d2ef344be7)
 
+- **git commit --amend** allows you to modify the most recent commit without creating a new commit. It is useful when you want to:
+  - Fix a commit message
+    - Example: You committed a message but realized it was incorrect.
+      ```bash
+      git commit -m "Bug fix in API"
+      ```
+    - You want to change it to "Fix authentication bug". Use:
+      ```bash
+      git commit --amend -m "Fix authentication bug"
+      ```
+  - Add missing changes to the last commit
+    - Example: You committed a change but forgot to add a file.
+      ```bash
+      echo "print('Bug fixed')" >> app.py
+      git add app.py
+      git commit -m "Fix authentication bug"
+      ```
+    - Oops! You forgot another file:
+      ```bash
+      echo "print('Logging added')" > logs.py
+      git add logs.py
+      git commit --amend --no-edit
+      ```
+    - The last commit now includes logs.py, but the commit message remains unchanged
+  
 ## Scenarios ##
 
 ### Scenario 1: Hotfix Deployment in Production ###

@@ -60,5 +60,6 @@ Dependency resolution is a critical step to ensure reproducibility and consisten
 - **Debugging Failed Builds**
 - **Fixing Deployment Issues**
 - **Handling CI/CD Pipeline Failures**
+- https://github.com/nawab312/CI_CD/blob/main/CI_CD_%20Pipeline_Troubleshooting_%26_Debugging/Notes.md
 
 

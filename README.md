@@ -1,3 +1,180 @@
+### Fundamentals of CI/CD ###
+- **What is CI/CD?**
+- **Importance of CI/CD in Software Development**
+- **CI vs CD vs Continuous Deployment**
+- **CI/CD Pipeline Architecture**
+- **Challenges in CI/CD Implementation**
+
+2. Version Control in CI/CD
+
+    Git Basics (Commit, Merge, Rebase, Cherry-Pick)
+
+    Git Workflows (GitFlow, Trunk-Based Development)
+
+    Feature Branching and Pull Requests
+
+    Webhooks & Git Triggers in CI/CD
+
+3. CI/CD Tools and Platforms
+
+    CI/CD Servers:
+
+        Jenkins
+
+        GitHub Actions
+
+        GitLab CI/CD
+
+        Bitbucket Pipelines
+
+        Azure DevOps
+
+        CircleCI
+
+        Travis CI
+
+    CD Tools:
+
+        ArgoCD
+
+        Spinnaker
+
+        FluxCD
+
+        Tekton
+
+4. CI/CD Pipeline Components
+
+    Source Code Management (SCM) Integration
+
+    Build Automation
+
+    Testing Automation (Unit, Integration, E2E, Security Tests)
+
+    Artifact Management (Nexus, Artifactory, Docker Registry)
+
+    Deployment Automation
+
+5. Jenkins for CI/CD
+
+    Jenkins Installation and Setup
+
+    Jenkins Pipeline (Declarative vs Scripted)
+
+    Managing Jenkins Plugins
+
+    Jenkinsfile: Syntax and Best Practices
+
+    Jenkins Agents and Distributed Builds
+
+    Jenkins Security (RBAC, Credentials, Secrets Management)
+
+6. Infrastructure as Code (IaC) in CI/CD
+
+    Terraform in CI/CD Pipelines
+
+    Ansible for Configuration Management in CI/CD
+
+    CloudFormation for AWS Deployments
+
+    Pulumi in CI/CD
+
+7. Continuous Integration (CI)
+
+    Code Quality Checks (Linting, Code Formatting)
+
+    Automated Builds (Maven, Gradle, NPM, Go, Python)
+
+    Unit Testing & Code Coverage
+
+    Static Code Analysis (SonarQube, Checkstyle)
+
+    Handling Merge Conflicts in CI
+
+8. Continuous Delivery (CD)
+
+    Blue-Green Deployment
+
+    Canary Deployment
+
+    Rolling Deployments
+
+    Feature Flags and Dark Launching
+
+    Progressive Delivery
+
+9. Containerization in CI/CD
+
+    Dockerfile Best Practices
+
+    Multi-Stage Builds in Docker
+
+    Docker Build Caching & Optimization
+
+    Container Image Scanning (Trivy, Clair, Anchore)
+
+10. Kubernetes in CI/CD
+
+    Deploying Applications on Kubernetes
+
+    Helm for Kubernetes Deployment
+
+    Kubernetes Rolling Updates & Rollbacks
+
+    CI/CD Pipeline for Kubernetes with ArgoCD
+
+    Kubernetes Operators for CI/CD
+
+11. Security in CI/CD (DevSecOps)
+
+    Secrets Management (Vault, AWS Secrets Manager, KMS)
+
+    Security Scanning (Snyk, Trivy, Aqua Security)
+
+    Dependency Scanning & SBOM (Software Bill of Materials)
+
+    Compliance and Policy as Code (Open Policy Agent)
+
+    Zero Trust CI/CD
+
+12. Monitoring & Observability in CI/CD
+
+    Logging in CI/CD (ELK, EFK)
+
+    Monitoring Pipelines (Prometheus, Grafana)
+
+    Distributed Tracing in CI/CD (Jaeger, OpenTelemetry)
+
+    Alerting in CI/CD Pipelines
+
+13. Database CI/CD
+
+    Database Schema Migrations in CI/CD
+
+    Tools for Database CI/CD (Flyway, Liquibase)
+
+    Managing Database Rollbacks in CI/CD
+
+14. Debugging & Troubleshooting CI/CD Pipelines
+
+    Common CI/CD Failures and Fixes
+
+    Debugging Jenkins Pipelines
+
+    Troubleshooting Kubernetes Deployments
+
+    Handling Build Failures in CI/CD
+
+15. Advanced CI/CD Topics
+
+    AI & ML in CI/CD (Automated Pipeline Optimization)
+
+    Self-Healing CI/CD Pipelines
+
+    Serverless CI/CD (AWS Lambda, Google Cloud Functions)
+
+    GitOps vs Traditional CI/CD
+
 **Continuous Integration (CI):** Automates the integration of code changes from multiple contributors into a single project. It involves: 
 - Frequent code commits to a shared repository.
 - Automated build and testing processes.

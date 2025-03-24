@@ -4,44 +4,29 @@
 - **CI vs CD vs Continuous Deployment**
 - **CI/CD Pipeline Architecture**
 - **Challenges in CI/CD Implementation**
+- https://github.com/nawab312/CI_CD/blob/main/Fundamentals_of_CI_CD.md
 
-2. Version Control in CI/CD
+### Version Control in CI/CD ###
+- **Git Basics (Commit, Merge, Rebase, Cherry-Pick)**
+- **Git Workflows (GitFlow, Trunk-Based Development)**
+- **Feature Branching and Pull Requests**
+- **Webhooks & Git Triggers in CI/CD**
+- https://github.com/nawab312/CI_CD/blob/main/GIT.md
 
-    Git Basics (Commit, Merge, Rebase, Cherry-Pick)
-
-    Git Workflows (GitFlow, Trunk-Based Development)
-
-    Feature Branching and Pull Requests
-
-    Webhooks & Git Triggers in CI/CD
-
-3. CI/CD Tools and Platforms
-
-    CI/CD Servers:
-
-        Jenkins
-
-        GitHub Actions
-
-        GitLab CI/CD
-
-        Bitbucket Pipelines
-
-        Azure DevOps
-
-        CircleCI
-
-        Travis CI
-
-    CD Tools:
-
-        ArgoCD
-
-        Spinnaker
-
-        FluxCD
-
-        Tekton
+### CI/CD Tools and Platforms ####
+- **CI/CD Servers:**
+  - **Jenkins**
+  - **GitHub Actions**
+  - **GitLab CI/CD**
+  - **Bitbucket Pipelines**
+  - **Azure DevOps**
+  - **CircleCI**
+  - **Travis CI**
+- **CD Tools:**
+  - **ArgoCD**
+  - **Spinnaker**
+  - **FluxCD**
+  - **Tekton**
 
 4. CI/CD Pipeline Components
 

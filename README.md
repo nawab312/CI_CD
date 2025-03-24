@@ -88,15 +88,12 @@
 
     Progressive Delivery
 
-9. Containerization in CI/CD
-
-    Dockerfile Best Practices
-
-    Multi-Stage Builds in Docker
-
-    Docker Build Caching & Optimization
-
-    Container Image Scanning (Trivy, Clair, Anchore)
+### Containerization in CI/CD ###
+- **Dockerfile Best Practices**
+- **Multi-Stage Builds in Docker**
+- **Docker Build Caching & Optimization**
+- **Container Image Scanning (Trivy, Clair, Anchore)**
+- https://github.com/nawab312/CI_CD/blob/main/Containerization_In_CI_CD.md
 
 ### Kubernetes in CI/CD ###
 - **Deploying Applications on Kubernetes**

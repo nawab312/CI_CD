@@ -98,17 +98,13 @@
 
     Container Image Scanning (Trivy, Clair, Anchore)
 
-10. Kubernetes in CI/CD
-
-    Deploying Applications on Kubernetes
-
-    Helm for Kubernetes Deployment
-
-    Kubernetes Rolling Updates & Rollbacks
-
-    CI/CD Pipeline for Kubernetes with ArgoCD
-
-    Kubernetes Operators for CI/CD
+### Kubernetes in CI/CD ###
+- **Deploying Applications on Kubernetes**
+- **Helm for Kubernetes Deployment**
+- **Kubernetes Rolling Updates & Rollbacks**
+- **CI/CD Pipeline for Kubernetes with ArgoCD**
+- **Kubernetes Operators for CI/CD**
+- https://github.com/nawab312/CI_CD/blob/main/Kubernetes_in_CI_CD.md
 
 11. Security in CI/CD (DevSecOps)
 

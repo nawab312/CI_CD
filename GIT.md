@@ -160,6 +160,7 @@
 ### GIT WorkFlows ###
 
 **Feature Branch Workflow**
+
 The Feature Branch Workflow is a Git workflow that encourages developers to create separate branches for each new feature or bug fix, ensuring that the main (or develop) branch always remains stable.
 
 How the Feature Branch Workflow Works
@@ -193,7 +194,65 @@ git pull origin main
 git merge feature/<feature-name>
 git push origin main
 ```
-  
+
+**Gitflow Workflow**
+
+*Develop and main branches*
+
+- Instead of a single main branch, this workflow uses two branches to record the history of the project. The main branch stores the official release history, and the develop branch serves as an integration branch for features. It's also convenient to tag all commits in the main branch with a version number.
+- The first step is to complement the default main with a develop branch. A simple way to do this is for one developer to create an empty develop branch locally and push it to the server:
+```bash
+git branch develop
+git push -u origin develop
+```
+- This branch will contain the complete history of the project, whereas main will contain an abridged version. Other developers should now clone the central repository and create a tracking branch for develop.
+
+![image](https://github.com/user-attachments/assets/7f3ecb20-ab21-4667-ab49-73aca16dffd1)
+
+*Feature branches*
+- Each new feature should reside in its own branch, which can be pushed to the central repository for backup/collaboration. But, instead of branching off of main, feature branches use develop as their parent branch. When a feature is complete, it gets merged back into develop. Features should never interact directly with main.
+- Note that feature branches combined with the develop branch is, for all intents and purposes, the Feature Branch Workflow. But, the Gitflow workflow doesn’t stop there
+- Feature branches are generally created off to the latest develop branch.
+```bash
+git checkout develop
+git branch feature_branch
+```
+- Finishing a feature branch
+```bash
+git checkout develop
+git merge feature_branch
+```
+![image](https://github.com/user-attachments/assets/27e9cd6a-18e1-4f32-9d6d-0fd481b183b4)
+
+*Release branches*
+- Once develop has acquired enough features for a release (or a predetermined release date is approaching), you fork a release branch off of develop. Creating this branch starts the next release cycle, so no new features can be added after this point—only bug fixes, documentation generation, and other release-oriented tasks should go in this branch. Once it's ready to ship, the release branch gets merged into main and tagged with a version number. In addition, it should be merged back into develop, which may have progressed since the release was initiated.
+```bash
+git checkout develop
+git chekout -b release/0.1.0
+```
+- Once the release is ready to ship, it will get merged it into main and develop, then the release branch will be deleted. It’s important to merge back into develop because critical updates may have been added to the release branch and they need to be accessible to new features.
+```bash
+git checkout main
+git merge release/0.1.0
+```
+![image](https://github.com/user-attachments/assets/9d8117c1-7928-4b3a-a18d-d90322d32a49)
+
+*Hotfix branches*
+- Maintenance or “hotfix” branches are used to quickly patch production releases. Hotfix branches are a lot like release branches and feature branches except they're based on main instead of develop. This is the only branch that should fork directly off of main. As soon as the fix is complete, it should be merged into both main and develop (or the current release branch), and main should be tagged with an updated version number.
+```bash
+git checkout main
+git checkout -b hotfix-branch
+```
+- Similar to finishing a release branch, a hotfix branch gets merged into both main and develop.
+```bash
+git checkout main
+git merge hotfix-branch
+git checkout develop
+git merge hotfix-branch
+git branch -D hotfix-branch
+```
+![image](https://github.com/user-attachments/assets/0ae858e7-ecdf-46ed-8cc5-a17b24bd3a0b)
+
 ## Scenarios ##
 
 ### Scenario 1: Hotfix Deployment in Production ###

@@ -103,17 +103,12 @@
 - **Kubernetes Operators for CI/CD**
 - https://github.com/nawab312/CI_CD/blob/main/Kubernetes_in_CI_CD.md
 
-11. Security in CI/CD (DevSecOps)
-
-    Secrets Management (Vault, AWS Secrets Manager, KMS)
-
-    Security Scanning (Snyk, Trivy, Aqua Security)
-
-    Dependency Scanning & SBOM (Software Bill of Materials)
-
-    Compliance and Policy as Code (Open Policy Agent)
-
-    Zero Trust CI/CD
+### Security in CI/CD (DevSecOps) ###
+- **Secrets Management (Vault, AWS Secrets Manager, KMS)**
+- **Security Scanning (Snyk, Trivy, Aqua Security)**
+- **Dependency Scanning & SBOM (Software Bill of Materials)**
+- **Compliance and Policy as Code (Open Policy Agent)**
+- **Zero Trust CI/CD**
 
 12. Monitoring & Observability in CI/CD
 

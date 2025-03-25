@@ -109,6 +109,7 @@
 - **Dependency Scanning & SBOM (Software Bill of Materials)**
 - **Compliance and Policy as Code (Open Policy Agent)**
 - **Zero Trust CI/CD**
+- https://github.com/nawab312/CI_CD/blob/main/Security_in_CI_CD_DevSecOps.md
 
 12. Monitoring & Observability in CI/CD
 

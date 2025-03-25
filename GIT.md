@@ -156,6 +156,43 @@
       git commit --amend --no-edit
       ```
     - The last commit now includes logs.py, but the commit message remains unchanged
+   
+### GIT WorkFlows ###
+
+**Feature Branch Workflow**
+The Feature Branch Workflow is a Git workflow that encourages developers to create separate branches for each new feature or bug fix, ensuring that the main (or develop) branch always remains stable.
+
+How the Feature Branch Workflow Works
+- Clone the Repository
+```bash
+git clone <repo_url>
+cd <repo_name>
+```
+- Create a New Feature Branch
+  - This keeps the feature isolated from main.
+  - Naming convention: `feature/login-page`, `feature/api-integration`, etc.
+```bash
+git checkout -b feature/<feature-name>
+```
+- Work on the Feature & Commit Changes
+```bash
+git add .
+git commit -m "Added login functionality"
+```
+- Push the Feature Branch to Remote
+```bash
+git push origin feature/<feature-name>
+```
+- Create a Pull Request (PR)
+  - Open a PR on GitHub/GitLab/Bitbucket.
+  - Request code review from team members.
+- Merge the Feature Branch into main
+```bash
+git checkout main
+git pull origin main
+git merge feature/<feature-name>
+git push origin main
+```
   
 ## Scenarios ##
 

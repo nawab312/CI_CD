@@ -1,4 +1,5 @@
 **Secrets Management (Vault, AWS Secrets Manager, Jenkins Credentials)**
+
 Managing secrets securely is critical in CI/CD pipelines to prevent unauthorized access, data breaches, and accidental exposure of sensitive information. 
 In a CI/CD environment, secrets include API keys, database credentials, SSH keys, and cloud access tokens, which must be stored securely and retrieved dynamically during pipeline execution.
 

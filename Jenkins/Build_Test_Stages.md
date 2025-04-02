@@ -52,6 +52,22 @@ def test_api_response():
     assert "data" in response.json()
 ```
 
+*flaky test*
+
+A flaky test refers to a test that intermittently fails or passes without any changes to the underlying code or environment. These tests are unreliable and cause instability in the CI/CD pipeline, making it difficult to trust the test results. Common Causes of Flaky Tests in CI/CD:
+- Network Instability: Network latency, timeouts, or connection issues when tests interact with external services.
+- Database Inconsistencies: Test failures caused by inconsistent data states in shared databases, or the inability to reset or control the database state during testing.
+- Race Conditions: In parallel or multi-threaded tests, the order of execution might affect the results, causing tests to fail when there is a timing issue.
+- Unreliable External Services: Dependencies on third-party services or APIs that may not always be available or responsive.
+
+Fixes for flaky tests in CI/CD:
+- Mock External Dependencies: Use mocking frameworks (e.g., WireMock, Mockito) to simulate external APIs and services. This prevents network or service unavailability from affecting test results.
+- Implement Retry Mechanism: Automatically retry flaky tests a few times before marking them as failed. This is useful for intermittent network or service issues.
+- Increase Timeout Settings: Extend timeout periods for tests that may take longer due to network latency or slow service responses.
+- Ensure Test Isolation: Reset the test environment before or after each test (e.g., clear databases, reset caches) to avoid shared state issues between tests.
+- Introduce Delays or Synchronization: Add delays or synchronization in multi-threaded tests to avoid race conditions and ensure proper execution order.
+- Use In-Memory Databases for Testing: Use fast, isolated, and predictable in-memory databases (like H2 or SQLite) to avoid database state inconsistencies.
+
 **Code Quality & Security Scanning**
 
 Code quality and security scanning help detect issues like code smells(Pieces of code that might not be wrong but could be improved for better maintainability and readability.), security vulnerabilities, and maintainability problems.

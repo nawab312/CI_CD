@@ -15,6 +15,8 @@ These strategies allow for more flexibility, faster updates, and easier scaling.
 - Independent Scaling: Each microservice can be scaled independently based on demand.
 - Feature Toggles and Dark Launching: New features can be deployed without affecting end users, allowing testing in production without full exposure.
 
+---
+
 **Blue-Green Deployment**
 
 Blue-Green Deployment is a modern deployment strategy designed to reduce downtime and mitigate the risks associated with application updates. 

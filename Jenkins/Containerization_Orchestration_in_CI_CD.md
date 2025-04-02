@@ -32,11 +32,15 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 - Apply it: `kubectl apply -f jenkins-sa.yaml`
-- Get the token:
+- Get the token: The below command is an alternative command introduced in Kubernetes 1.24+ to create a token directly for a service account.
 ```bash
 kubectl create token jenkins-sa -n default
 eyJhbGciOiJSUzI1NiIsImtpZCI6InhqRVdIcFpUaGdnS2JGZm9nY2M3X1FxbU1ZMGpIYzVudklKMmdyY2UzVkUifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzQyODExMjAxLCJpYXQiOjE3NDI4MDc2MDEsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiYmFjYzVmNTctZDA2Mi00ZjRhLTk4MWUtYjI2NTZhNDdhMjJhIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImplbmtpbnMtc2EiLCJ1aWQiOiIyOWM1MzczZi1jMTBlLTQyMDUtYjFhOC0yYWQxMTIyOGVhZTIifX0sIm5iZiI6MTc0MjgwNzYwMSwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmRlZmF1bHQ6amVua2lucy1zYSJ9.ABJ8_XJNfFWrbJKqD0EuneUv411KyavRdiM5NRVAQB9nkbNEx9QIgYYE2fpyGu8DH_h_c6BC6GvumKVFb2qWK-21lz8VpBduqM-DNTkaku6pk9a7rmy_ydtikDh38POX_Sti_6FdpxjAtvF92tsgj4jrieJwULbCCm5xaCba82wA_5IornJUO8bcJUc0YgVU15ulMcQzQNS5pQ6jKnKC0GtlCo-jVs-GwBUd0jTdfl9gJnBdlf8N7yY_T4qvTt6bSqFPoYwa991xVjUwNl2y8O45APonfsaH29N9nl9mHkrZRN4LzXO-r4_AOTU3B7eL-GikRio7215fwDy527XSRQ
 ```
+- There is one more command to get the Token
+  ```bash
+  kubectl get secret jenkins-sa-token -o jsonpath='{.data.token}' | base64 --decode
+  ```
 - Store this token in Jenkins Credentials as a Secret Text (`K8S_SA_TOKEN`).
 
 **Jenkins Pipeline to Deploy to Minikube**

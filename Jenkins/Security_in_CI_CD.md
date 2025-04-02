@@ -87,55 +87,166 @@ withVault(configuration: [vaultUrl: 'https://vault.example.com'], secrets: [
 }
 ```
 
-**Signed Commits & Code Reviews**
+**DevSecOps in Jenkins**
 
-Ensuring only trusted and verified code is deployed is critical in a CI/CD pipeline. Two key practices help achieve this:
-- Signed Commits – Ensures that the code's author is genuine and authenticated.
-- Code Reviews – Ensures that changes are verified by other developers before merging into production.
+DevSecOps stands for "Development, Security, and Operations," emphasizing the integration of security practices into the CI/CD pipeline. 
+In the context of Jenkins, DevSecOps means incorporating security measures at every stage of the software development and deployment lifecycle. 
+The goal is to automate security testing and monitoring within the pipeline to detect and mitigate security vulnerabilities earlier in the process.
 
-What Are Signed Commits
+This is How Devops Flow look Like
 
-Signed commits use cryptographic signatures (GPG, SSH, or X.509 certificates) to verify the author of a Git commit.
+![image](https://github.com/user-attachments/assets/3328918b-66c3-49fe-b8e2-9f68df4dab53)
 
-Why Use Signed Commits?
-- Ensures commits come from authorized developers.
-- Prevents attackers from spoofing commits (impersonating developers).
-- Ensures code integrity (commit history cannot be tampered with).
+This is How DevSecops Flow look Like
 
-How It Works?
-- The developer signs their commit using a private key.
-- The Git platform (GitHub, GitLab, Bitbucket) verifies the signature using the developer’s public key.
-- If the signature is valid, the commit is marked as verified
-- If it's invalid, the commit is rejected
-- Example: How to Sign a Commit in Git
-  ```bash
-  git commit -S -m "This is a secure signed commit"
-  ```
-- GitHub Shows Verified Commits Like This:
-  - Verified: The commit is signed and trusted.
-  - Unverified: The commit is unsigned or modified.
-- Enforcing Signed Commits in GitHub GitHub allows organizations to enforce signed commits on repositories:
-  ```bash
-  git config commit.gpgsign true
-  ```
+![image](https://github.com/user-attachments/assets/1865e459-3e47-494b-8723-61dd0d703086)
 
-What Are Code Reviews?
+![image](https://github.com/user-attachments/assets/798b521f-d1aa-4a92-b26c-b6ab53f780cc)
 
-Code reviews ensure that all changes are reviewed and approved before merging.
+![image](https://github.com/user-attachments/assets/1a4ee66f-5203-45d3-81d9-69ee577d8331)
 
-Why Are Code Reviews Important?
-- Helps detect security vulnerabilities before merging.
-- Ensures code quality and follows best practices.
-- Prevents unauthorized or malicious code from getting deployed.
+*Network Vulnerability Assessment (NVA)*
+- Jenkins Integration: Use network security scanning tools like Rapid7 Nexpose, OpenVAS, or Tenable Nessus in Jenkins pipelines to detect vulnerabilities in network configurations.
+- Example: Automate scanning of infrastructure components like load balancers, firewalls, and cloud networking configurations for misconfigurations or security weaknesses.
 
-How Code Reviews Work?
-- A developer creates a Pull Request (PR) with their changes.
-- Another developer or team lead reviews the code for security, performance, and logic.
-- If everything looks good, the PR is approved and merged.
-- If issues are found, the developer fixes them before merging.
+*Cloud Vulnerability Assessment (CVA)*
+- Jenkins Integration: Use CloudHealth by VMware, AWS Security Hub, or Prowler to check cloud security best practices.
+- Example: Automate cloud security posture management (CSPM) scans in Jenkins for AWS, Azure, or GCP deployments.
 
-Example: Enforcing Code Reviews in GitHub
-- GitHub allows setting Branch Protection Rules to require:
-  - Mandatory PR approvals before merging
-  - Signed commits only
-  - Security checks (e.g., automated vulnerability scanning)
+*Container Vulnerability Assessment (KVA)*
+- Jenkins Integration: Automate container scanning using Trivy, Clair, or Amazon ECR scanning before pushing images to registries.
+- Example: Run security checks on Docker images and Kubernetes deployments to detect vulnerabilities in containerized applications.
+
+*Static Code Analysis (SVA)*
+- Jenkins Integration: Perform Static Application Security Testing (SAST) using Fortify, SonarQube, or Checkmarx in Jenkins.
+- Example: Scan source code during Jenkins builds to find hardcoded secrets, insecure coding patterns, and vulnerabilities.
+
+*Software Composition Analysis (SCA)*
+- Jenkins Integration: Use WhiteSource, OWASP Dependency-Check, or Snyk for third-party dependency scanning.
+- Example: Jenkins can automatically check for license compliance and known CVEs in open-source libraries.
+
+*Dynamic Vulnerability Assessment (DVA)*
+- Jenkins Integration: Run Dynamic Application Security Testing (DAST) with OWASP ZAP, Burp Suite, or Micro Focus Fortify.
+- Example: Jenkins can trigger automated penetration tests on running applications to simulate real-world attack scenarios.
+
+*Penetration Testing (PEN)*
+- Jenkins Integration: Automate pentesting tools like Metasploit, Kali Linux scripts, or OWASP ZAP to simulate attacks.
+- Example: Jenkins can execute scheduled penetration tests on applications and APIs in a staging environment before deployment.
+
+---
+
+**Software Supply Chain Security in CI/CD**
+
+Software Supply Chain Security ensures that every component in your CI/CD pipeline—from dependencies to builds and deployments—is secure, verified, and free from vulnerabilities. 
+It prevents supply chain attacks, where attackers compromise open-source dependencies, build tools, or deployment pipelines.
+
+Key Components of Supply Chain Security in CI/CD
+- SBOM (Software Bill of Materials)
+- Signing Artifacts & Images
+
+*SBOM (Software Bill of Materials)*
+
+A Software Bill of Materials (SBOM) is a detailed inventory of all the components in a software application, including:
+- Source Code (Custom-built code)
+- Libraries & Dependencies (Open-source & third-party)
+- Build Tools (Maven, Gradle, NPM, etc.)
+- Container Images
+- Licensing & Compliance Details
+
+Why is SBOM Important in CI/CD?
+- Detect Vulnerabilities: Helps in identifying security risks in dependencies before deployment.
+- Compliance & Auditing: Required for standards like NIST, ISO 27001, SOC 2, and PCI-DSS.
+- Prevents Supply Chain Attacks: Ensures you’re not using compromised third-party components.
+- Software Provenance: Tracks where each component originated from and whether it’s trusted.
+
+How to Generate an SBOM in Jenkins?
+- Tool: CycloneDX (Industry-standard SBOM format)
+- Tool: SPDX (Software Package Data Exchange)
+
+```groovy
+// Example: Using CycloneDX to Generate SBOM in a Jenkins Pipeline
+
+pipeline {
+    agent any
+    stages {
+        stage('Generate SBOM') {
+            steps {
+                script {
+                    sh "mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+        }
+    }
+}
+```
+
+*Signing Artifacts & Images*
+
+Signing ensures that build artifacts (JARs, WARs, binaries, container images, etc.) are trusted and untampered throughout the CI/CD pipeline. It guarantees that the software being deployed was not altered by attackers.
+- Artifact Signing = Protects software packages (JARs, Docker images, etc.).
+- Container Image Signing = Ensures Docker images are secure before deployment.
+
+Signing Artifacts in Jenkins (JAR/WAR Packages)
+- Tool: GPG (GNU Privacy Guard) for Code Signing
+- Tool: Cosign (by Sigstore) for Container Image Signing
+
+```groovy
+// Example: Signing JAR Files in Jenkins using GPG
+
+pipeline {
+    agent any
+    environment {
+        GPG_KEY_ID = 'YOUR-GPG-KEY-ID'
+    }
+    stages {
+        stage('Build Artifact') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Sign Artifact') {
+            steps {
+                sh "gpg --batch --yes --detach-sign --armor -u ${GPG_KEY_ID} target/myapp.jar"
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/myapp.jar.asc', fingerprint: true
+        }
+    }
+}
+```
+
+```groovy
+// Example: Signing JAR Files in Jenkins using GPG
+
+pipeline {
+    agent any
+    environment {
+        COSIGN_PASSWORD = credentials('cosign-key-password')  // Store safely in Jenkins credentials
+    }
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t myapp:latest .'
+            }
+        }
+        stage('Sign Image') {
+            steps {
+                sh 'cosign sign --key cosign.key myapp:latest'
+            }
+        }
+    }
+}
+```
+
+
+
+
+

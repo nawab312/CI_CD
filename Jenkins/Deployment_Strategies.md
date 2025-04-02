@@ -111,3 +111,18 @@ Challenges of Rolling Deployments
   - If the application has a stateful backend or relies on a database, you must ensure that the new version can work with data created by the old version. Handling database migrations or changes to schema might add complexity to the process.
 - Slower Rollouts:
   - Since the deployment occurs gradually, it may take longer to fully deploy the new version to all instances compared to other methods (like blue-green deployment). However, this tradeoff is often acceptable for its advantages in zero-downtime deployment.
+ 
+---
+
+**Feature Toggles & Dark Launching**
+
+Both Feature Toggles (also known as Feature Flags) and Dark Launching are strategies used in CI/CD pipelines to manage the deployment of new features or changes in a controlled, incremental, and often non-disruptive manner
+
+*Feature Toggles (Feature Flags)*
+- Feature Toggles are used to enable or disable specific features of an application without having to redeploy the code. This allows developers to deploy incomplete or untested features in production and control when those features are made available to end users.
+
+*Dark Launching*
+- Dark Launching refers to the practice of deploying a new feature to production, but keeping it invisible to end users. The feature is “live” in the environment, but users cannot access it until it is explicitly enabled. It is often used to test new functionality with real-world data and conditions, ensuring that everything works correctly before exposing it to all users. How Dark Launching Works:
+  - Invisible to Users: The new feature is deployed to the live environment, but users are unaware of it. This can be done by keeping the feature hidden behind feature toggles, URL paths, or other controls that prevent end-users from interacting with it.
+  - Real-World Testing:
+    - Dark launching allows teams to test a feature in a live environment with real-world traffic, ensuring it works under production conditions. This can be crucial for validating complex functionality, performance, or integrations that cannot be adequately tested in staging or pre-production environments

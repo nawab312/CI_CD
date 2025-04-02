@@ -323,4 +323,10 @@ pipeline {
     }
 }
 ```
+
+*In a Jenkins pipeline deploying a containerized application to a Minikube cluster, following  ensures that the application deployment is updated with the latest image while avoiding cached versions*
+```bash
+kubectl rollout restart deployment <deployment-name>
+```
+
     

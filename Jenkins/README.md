@@ -10,27 +10,17 @@
   - **Deployment**
   - **Monitoring & Feedback Loop**
 
-2. Jenkins Fundamentals
-
-    What is Jenkins?
-
-    Jenkins Architecture
-
-        Master-Agent Setup
-
-        Jenkins Jobs & Pipelines
-
-    Installation & Setup
-
-        Installing Jenkins on Linux, Windows, Docker
-
-        Jenkins Configuration
-
-        Managing Plugins
-
-        Security Best Practices (User Roles, Authentication)
-
-        Jenkins Backup & Restore
+### Jenkins Fundamentals ###
+- **What is Jenkins?**
+- **Jenkins Architecture**
+  - **Master-Agent Setup**
+  - **Jenkins Jobs & Pipelines**
+- **Installation & Setup**
+  - **Installing Jenkins on Linux, Windows, Docker**
+  - **Jenkins Configuration**
+  - **Managing Plugins**
+  - **Security Best Practices (User Roles, Authentication)**
+  - **Jenkins Backup & Restore**
 
 ### Jenkins Pipeline & Scripting ###
 - **Jenkins Pipeline Basics**
@@ -51,7 +41,7 @@
   - **Using the quietPeriod directive**
   - **Handling Job Queue & Resource Utilization**
 
-4. Source Code Management (SCM)
+### Source Code Management (SCM)
 
     Jenkins & Git Integration
 

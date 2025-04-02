@@ -110,19 +110,18 @@ Unlike a typical Kubernetes cluster where users authenticate using certificates,
 **Attach the Role to Jenkins EC2 Instance**
 - Attach the IAM role to the EC2 instance running Jenkins.
 
-**Authentication Flow**
-- Request Authentication Token
-  - The `kubectl` command triggers a request to authenticate with EKS.
-  - `kubectl` runs `aws eks get-token`, which fetches a temporary authentication token.
+**AWS EKS Authentication with `aws eks update-kubeconfig` and aws eks get-token**
+- Purpose of `aws eks update-kubeconfig`
+  - This command configures `kubectl` to interact with an EKS cluster by updating the `kubeconfig` file.
+  - It retrieves:
+    - The cluster API server endpoint.
+    - The certificate authority (CA) data.
+    - The authentication mechanism using `aws eks get-token`.
+  - Syntax and Example
     ```bash
-    aws eks get-token --cluster-name my-eks-cluster
+    aws eks update-kubeconfig --name my-eks-cluster --region us-east-1 --profile jenkins
     ```
-- IAM Role Validation
-  - AWS checks if the user or role has `eks:GetToken` permissions in IAM.
-  - If authorized, AWS generates a short-lived authentication token.
-- Using the Token in `kubeconfig`
-  - The token is stored in the `kubeconfig` file, allowing `kubectl` to use it for cluster access.
-  - Example `kubeconfig` entry:
+  - It modifites `~/.kube/config`. This ensures that every kubectl request automatically fetches an authentication token.
     ```yaml
     users:
     - name: jenkins
@@ -135,6 +134,10 @@ Unlike a typical Kubernetes cluster where users authenticate using certificates,
             - get-token
             - --cluster-name
             - my-eks-cluster
+    ```
+  - Role of `aws eks get-token`. This fetches a temporary authentication token from AWS, which is used to authenticate with the EKS cluster. AWS IAM validates if the user/role has `eks:GetToken` permission.
+    ```bash
+    aws eks get-token --cluster-name my-eks-cluster
     ```
 
 ### IAM + Kubernetes RBAC (Authorization) ###

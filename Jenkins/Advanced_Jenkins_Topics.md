@@ -103,6 +103,14 @@ pipeline {
 - Load Distribution:
   - Jenkins Queue Management and appropriate node labels ensure heavy workloads don’t overwhelm specific agents.
  
+**Caching Dependencies**
+
+One of the most impactful optimizations is caching build dependencies to avoid redundant work across builds:
+- For Java projects, I cache the `~/.m2` directory to reuse downloaded Maven dependencies.
+- For Node.js, I cache the `node_modules` directory and `npm` cache.
+- For Python, caching `pip` or virtual environment directories saves time on dependency resolution.
+- I also leverage Docker layer caching to speed up image builds—ensuring unchanged layers are reused across builds.
+ 
 **Plugin and Dependency Management**
 - Minimal Plugin Footprint:
   - Only essential plugins are installed to reduce memory usage, security vulnerabilities, and upgrade complexities.

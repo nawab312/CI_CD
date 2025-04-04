@@ -69,15 +69,11 @@
  - **Code Quality & Security Scanning**
  - **SonarQube & SAST Tools Integration**
 
-6. Artifact Management
-
-    Storing Build Artifacts
-
-        Nexus, Artifactory, AWS S3, Docker Hub
-
-    Versioning & Tagging Releases
-
-    Artifact Promotion Strategies
+### Artifact Management ###
+- **Storing Build Artifacts**
+ - **Nexus, Artifactory, AWS S3, Docker Hub**
+- **Versioning & Tagging Releases**
+ - **Artifact Promotion Strategies**
 
 ### Containerization & Orchestration in CI/CD ###
 - **Jenkins with Docker**

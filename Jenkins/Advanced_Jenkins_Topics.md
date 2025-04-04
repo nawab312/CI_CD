@@ -1,3 +1,115 @@
+### Jenkins Performance Optimization ###
+
+**Pipeline Design Optimization**
+- Pipeline as Code (`Jenkinsfile`):
+  - All pipelines are defined declaratively using `Jenkinsfile`, which ensures consistency and version control.
+  - Shared Libraries are used to centralize common logic and avoid duplication across multiple pipelines.
+- Pipeline Stage Timeouts:
+  - Implement `timeout()` for each stage to prevent jobs from hanging and blocking executors indefinitely.
+
+*Shared Libraries*
+
+Jenkins Shared Libraries are reusable, version-controlled Groovy scripts that centralize common pipeline logic (like build, deploy, notifications) across multiple `Jenkinsfiles`. They help eliminate code duplication, improve maintainability, and enforce standard CI/CD practices across teams.
+
+Imagine you’re working on 5 microservices. Each one has a Jenkins pipeline that does this:
+- Checkout code
+- Build Docker image
+- Push image to ECR
+- Deploy to Kubernetes
+
+Now, repeating this same logic in 5 `Jenkinsfiles` means duplicating code. That’s a maintenance nightmare. Shared Library = Place to write common Jenkins code once, and use it in all Jenkinsfiles. Step-by-Step Example
+- Create the Shared Library Repo
+  ```bash
+  git@github.com:your-org/jenkins-shared-libraries.git
+  ```
+- Folder Structure
+  ```bash
+  jenkins-shared-libraries/
+  └── vars/
+    └── deployApp.groovy
+  ```
+- Inside `deployApp.groovy`
+  ```groovy
+  def call(String serviceName) {
+    stage("Build Docker Image") {
+        sh "docker build -t ${serviceName}:latest ."
+    }
+    stage("Push to ECR") {
+        sh "docker push ${serviceName}:latest"
+    }
+    stage("Deploy to Kubernetes") {
+        sh "kubectl apply -f k8s/${serviceName}-deployment.yaml"
+    }
+  }
+  ```
+- In Your Jenkinsfile (for any service)
+```groovy
+@Library('jenkins-shared-lib') _   // Load the shared library
+
+pipeline {
+    agent any
+
+    stages {
+        stage("CI/CD Pipeline") {
+            steps {
+                deployApp("orders-service")   // Reuse the shared function
+            }
+        }
+    }
+}
+```
+- How to Register the Library in Jenkins
+  - Manage Jenkins → Configure System → Global Pipeline Libraries
+  - Name: `jenkins-shared-lib`
+  - Default version: `main` (or tag/branch)
+  - Source Code Management: Git
+  - Project repository: `https://github.com/your-org/jenkins-shared-libraries.git`
+
+*timeout()* 
+
+timeout is a safety mechanism in pipeline stages that limits how long a stage or job is allowed to run. If it exceeds the time, the job is automatically aborted. This prevents:
+- Hanging jobs
+- Blocked runners/executors
+- Wasted compute resources
+- Pipeline deadlocks
+```groovy
+pipeline {
+  agent any
+  stages {
+    stage('Test') {
+      options {
+        timeout(time: 15, unit: 'MINUTES')
+      }
+      steps {
+        sh './run-tests.sh'
+      }
+    }
+  }
+}
+```
+
+**Job Configuration and Artifact Management**
+- Archiving Only Needed Artifacts:
+  - Avoid archiving unnecessary files to reduce storage I/O and Jenkins load.
+- Retention Policies:
+  - Set rules to keep only the latest N successful and failed builds to maintain a clean and lightweight system.
+- Post-Build Cleanup:
+  - Automatically clean up workspace using `Workspace Cleanup Plugin` or scripted logic.
+ 
+**Executor and Load Management**
+- Dedicated Agents:
+  - Master node runs with zero executors to handle orchestration only.
+  - Builds are delegated to labeled agents based on resource needs (e.g., memory-intensive, GPU builds).
+- Load Distribution:
+  - Jenkins Queue Management and appropriate node labels ensure heavy workloads don’t overwhelm specific agents.
+ 
+**Plugin and Dependency Management**
+- Minimal Plugin Footprint:
+  - Only essential plugins are installed to reduce memory usage, security vulnerabilities, and upgrade complexities.
+- Frequent Plugin Updates:
+  - Regularly update plugins to take advantage of performance improvements and security patches.
+
+
 **Parallel Execution**
 
 Parallel execution in Jenkins CI/CD pipelines allows multiple independent tasks (such as builds, tests, deployments) to run simultaneously instead of sequentially. This significantly reduces overall execution time and improves pipeline efficiency. Why Parallel Execution?

@@ -119,17 +119,9 @@
  - **SBOM (Software Bill of Materials)**
  - **Signing Artifacts & Images**  
 
-11. Monitoring & Observability in CI/CD
-
-    Jenkins Logging & Monitoring
-
-        Logging with ELK / EFK
-
-        Monitoring with Prometheus & Grafana
-
-    Alerting Mechanisms
-
-        Slack / Email / PagerDuty Notifications
+### Monitoring & Observability in CI/CD ###
+- **Monitoring in CI/CD (With KPIs, SLIs, SLOs, and SLAs)**
+- **Observability in CI/CD (With KPIs, SLIs, SLOs, and SLAs)**
 
 12. Jenkins & Cloud Integrations
 

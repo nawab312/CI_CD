@@ -4,6 +4,17 @@ When a build fails, the first step is to identify the nature of the failure. It 
 
 *Prevent Recurrence*
 - Add automated retry logic: If a job fails due to a temporary issue, the pipeline automatically retries it without manual intervention
+```groovy
+retry(3) {
+    sh './run-tests.sh'
+}
+```
+  - Transient network failures
+    - Example: A pipeline stage pulls a Docker image or fetches a dependency from an external registry (e.g., npm, PyPI, Maven, Docker Hub).
+    - Occasionally, due to DNS failures or rate limits, the job fails even though the code is fine.
+    - Retry logic helps: Automatically retries the stage — it often succeeds on the second or third attempt when the transient issue clears up.
+    `
+
 - Improve tests or pipelines: If builds are failing due to poor tests or unstable pipeline steps, I improve their quality to make them more reliable
 - Add pipeline stage timeouts: If a job hangs indefinitely (e.g., waiting for a service or a broken loop), I set time limits to prevent it from blocking the entire pipeline.
 - Automate rollback or artifact cleanup: When a build or deploy fails, rollback changes or clean up resources to keep the environment clean

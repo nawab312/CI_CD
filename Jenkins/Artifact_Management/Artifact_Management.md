@@ -1,6 +1,5 @@
 - *Storing Build Artifacts: Use repositories like Nexus, Artifactory, AWS S3, or Docker Hub to store build artifacts for consistency and traceability.*
 - *Versioning & Tagging Releases: Use version numbers and tags to ensure proper tracking and deployment of specific versions across environments.*
-- *Versioning & Tagging Releases: Use version numbers and tags to ensure proper tracking and deployment of specific versions across environments.*
 
 **Storing Build Artifacts**
 

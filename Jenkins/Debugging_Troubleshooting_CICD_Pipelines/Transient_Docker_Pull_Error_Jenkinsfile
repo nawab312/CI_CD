@@ -1,0 +1,36 @@
+'''
+Sometimes, pulling a Docker image fails due to:
+- Temporary internet issues
+- Docker Hub rate limits
+- Registry downtime
+'''
+
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+    }
+
+    environment {
+        IMAGE_NAME = 'nonexistent-image'
+    }
+
+    stages {
+        stage('Simulate Transient Pull Failure') {
+            steps {
+                script {
+                    retry(3) {
+                        echo "Attempting to Pull Docker Image ${IMAGE_NAME}"
+                        sh "docker pull ${IMAGE_NAME}"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            echo "Pull failes after 3 Rerties"
+        }
+    }
+}

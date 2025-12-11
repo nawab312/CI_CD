@@ -1,6 +1,11 @@
-**Continuous Integration (CI):** Automates the integration of code changes from multiple contributors into a single project. It involves: 
-- Frequent code commits to a shared repository.
-- Automated build and testing processes.
+**Continuous Integration (CI):** Continuous Integration (CI) is a software development practice where developers frequently merge (integrate) their code changes into a shared repository, and every merge triggers an automated build and automated tests.
+- Automatic build is the process where the CI system compiles your code, installs dependencies, and packages the application automatically.
+- When you push code to Git a CI tool like Jenkins, GitHub Actions, GitLab CI, Azure DevOps automatically:
+  - Pulls the latest code
+  - Installs dependencies(e.g., npm install, pip install, mvn install)
+  - Compiles the application
+  - Runs tests
+  - Creates artifacts(JAR, WAR, Docker image, ZIP, binaries, etc.)
 
 **Continuous Delivery (CD):** Extends CI by automating the release process, ensuring that software can be deployed at any time. Stages include automated deployment to staging environments, testing, and final release.
 

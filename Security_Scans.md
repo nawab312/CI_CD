@@ -5,6 +5,8 @@ Security scans in CI/CD are automated checks that look for known, preventable se
 - Obvious secrets
 - Policy violations
 
+---
+
 ***Security scans are Reactive, not Proactive***
 - Security scans react to known problems after they already exist; they do not prevent new or unknown problems from being created.
 - Concrete examples
@@ -14,6 +16,29 @@ Security scans in CI/CD are automated checks that look for known, preventable se
     - Damage is already possible
 
 They do not understand your business logic.
+
+**What can be done better (Proactive controls)**
+
+*Shift security left — before code is committed*
+- Pre-commit hooks (e.g., secret scanning before git commit)
+- IDE plugins that flag insecure code while writing it
+- Why this matters: Prevents mistakes instead of reporting them later.
+- Hard truth: If the first time you detect a secret is in CI, you’re already late.
+
+*Enforce guardrails, not warnings*
+- Replace: “Scan and alert” With: “Block unsafe actions”
+- Examples:
+  - Block commits containing secrets
+  - Fail pipelines if infra violates policy (open S3, public SGs)
+  - Admission controllers in Kubernetes
+ 
+*Secure-by-default platforms*
+- Reduce the chance of error instead of expecting perfection.
+- Examples:
+  - Short-lived credentials instead of static secrets
+  - Managed IAM roles instead of API keys
+
+---
 
 ## Main types of security scans (and what they really catch) ##
 

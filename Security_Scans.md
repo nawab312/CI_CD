@@ -15,9 +15,9 @@ Security scans in CI/CD are automated checks that look for known, preventable se
 
 They do not understand your business logic.
 
-##Main types of security scans (and what they really catch)##
+## Main types of security scans (and what they really catch) ##
 
-###SAST — Static Application Security Testing###
+### SAST — Static Application Security Testing ###
 - Scans: Source code
 - Finds: Insecure coding patterns
 - Examples:
@@ -26,7 +26,7 @@ They do not understand your business logic.
   - Unsafe deserialization
 - Blind Spot: It doesn’t know how the code is used at runtime
 
-###SCA — Software Composition Analysis###
+### SCA — Software Composition Analysis ###
 - Scans: Dependencies
 - Finds: Known CVEs in libraries
 - Examples:
@@ -35,7 +35,7 @@ They do not understand your business logic.
   - Vulnerable npm packages
 - Critical weakness: Known CVE ≠ exploitable in your app. No CVE ≠ safe
 
-###DAST — Dynamic Application Security Testing###
+### DAST — Dynamic Application Security Testing ###
 - Scans: Running Application
 - Finds: Runtime Vulnerabilities
 - Examples:

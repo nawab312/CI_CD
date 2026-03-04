@@ -7,6 +7,37 @@ You have setup a Jenkins master-slave architecture and you notice that the build
 
 The master node schedules and triggers builds, and the slave nodes are expected to execute them. However, you've noticed that most builds are running on SlaveNode3, and SlaveNode1 and SlaveNode2 are underutilized, resulting in an imbalance.
 
+**What is Executors**
+- A slot on a Jenkins node (agent) that can run one build at a time. If a node has:
+  - 2 Executors → It can run 2 builds in parallel
+  - 5 Executors → 5 Parallel builds
+  - Each running stage occupies one executor.
+- When a pipeline runs: `Agent assigned → Executor allocated → Steps execute → Executor busy`
+- If your pipeline has 5 stages running sequentially, it usually requires: 1 executor at a time
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') { steps { ... } }
+        stage('Test') { steps { ... } }
+        stage('Scan') { steps { ... } }
+        stage('Package') { steps { ... } }
+        stage('Deploy') { steps { ... } }
+    }
+}
+```
+- But for parallel stages like in below example 3 executors are required simultaneously
+```groovy
+stage('Testing') {
+    parallel {
+        stage('Unit Test') { steps { ... } }
+        stage('Integration Test') { steps { ... } }
+        stage('Security Test') { steps { ... } }
+    }
+}
+```
+
 **Potential Issues and Resolutions:**
 - **Inconsistent Node Labels Configuration(Uneven Load Distribution):** If jobs are configured with specific labels (e.g., linux or windows), Jenkins will try to schedule those jobs on the corresponding nodes. If the jobs aren’t labeled correctly or are not being distributed properly, some nodes may end up handling more jobs than others.
 For example, if a job is set to run only on linux nodes, it will run on any linux-labeled node (either SlaveNode1 or SlaveNode3). But if SlaveNode3 has more executors, it will handle more jobs than SlaveNode1.

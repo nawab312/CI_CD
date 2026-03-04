@@ -100,7 +100,7 @@ pipeline {
 
 - **Using Configuration for each Environment** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario-5.md
 
-- **Secrets Management** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario6.md
+- **Secrets Management and Security** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Security_in_CI_CD.md
 
 - **Jenkins On EC2 Authenticating with EKS** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Jenkins_EKS_Authentication.md
 

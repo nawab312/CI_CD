@@ -34,27 +34,57 @@ pipeline {
 
 *AWS Secrets Manager*
 
-AWS Secrets Manager securely stores, retrieves, and rotates secrets such as database passwords, API keys, and encryption keys.
-- Secrets are encrypted and stored securely in AWS.
-- IAM roles ensure only authorized users/services can access them.
-- Automatic secret rotation for credentials like RDS passwords.
+Approach 1: Using AWS Secrets Manager Plugin
+- Install *AWS Secrets Manager Credentials Provider* Plugin
+- Configure AWS IAM Permissions: The Jenkins instance (or agent) should have an IAM role or AWS access keys with these permissions:
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "secretsmanager:GetSecretValue",
+    "secretsmanager:ListSecrets"
+  ],
+  "Resource": "arn:aws:secretsmanager:us-east-1:123456789012:secret:*"
+}
+```
+- Use the Secret in Jenkins Pipeline
+  - Store a secret in *AWS Secrets Manager* (e.g., `my-db-password`).
+```groovy
+pipeline {
+    agent any
+    environment {
+        DB_PASSWORD = credentials('my-db-password')  // Fetch from AWS Secrets Manager
+    }
+    stages {
+        stage('Use Secret') {
+            steps {
+                sh 'echo "Database Password: ****"'  // Secret is masked
+            }
+        }
+    }
+}
+```
 
-How to Use AWS Secrets Manager in a CI/CD Pipeline
-- Go to AWS Console → Secrets Manager → Store a New Secret.
-- Choose a secret type (Key-Value, RDS credentials, etc.).
-- Assign a name (e.g., `/dev/api_key`).
-- Configure IAM permissions to allow Jenkins to access secrets.
+Approach 2: Using AWS CLI in Jenkins
+- If the plugin is not available, AWS CLI can fetch secrets dynamically.
+- Ensure AWS CLI is Installed on Jenkins agents.
+- Set Up IAM Permissions (Same as above).
+
 ```groovy
 pipeline {
     agent any
     stages {
-        stage('Fetch Secrets') {
+        stage('Retrieve Secret') {
             steps {
                 script {
-                    def secretValue = sh(script: "aws secretsmanager get-secret-value --secret-id /dev/api_key --query SecretString --output text", returnStdout: true).trim()
-                    env.API_KEY = secretValue
+                    def secret = sh(script: "aws secretsmanager get-secret-value --secret-id my-db-password --query SecretString --output text", returnStdout: true).trim()
+                    env.DB_PASSWORD = secret  // Store secret in environment variable
                 }
-                sh 'echo "Using secret securely in pipeline..."'
+            }
+        }
+        stage('Use Secret') {
+            steps {
+                sh 'echo "DB Password: ****"'  // Avoid printing raw secrets
             }
         }
     }

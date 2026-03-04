@@ -19,7 +19,7 @@ stage('Production Approval') {
 - An authorized user clicks to continue
 - Most common use case: Dev → QA → Staging → Manual Approval → Production
 
-### Who Can Approce ###
+### Who Can Approve ###
 
 **RBAC Control**
 ```groovy

@@ -96,10 +96,7 @@ pipeline {
 
 - **Pass Values Dynamically To Jenkins** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Parameters.md
  
-- **Input step in a Jenkins pipeline is and how it works?**
-  - The input step in Jenkins is used to pause the pipeline execution and wait for human interaction or approval before continuing. This step is commonly used for manual intervention, such as when you want someone to approve the deployment to production or review specific changes before proceeding with further steps.
-  - https://github.com/nawab312/CI_CD/blob/main/Jenkins/Jenkinsfile/User-Input/Jenkinsfile-1
-  - https://github.com/nawab312/CI_CD/blob/main/Jenkins/Jenkinsfile/User-Input/Jenkinsfile-2
+- **Manual Approval Gate (INPUT)** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Manual_Approval_Gate_Input.md
 
 - **Using Configuration for each Environment** https://github.com/nawab312/CI_CD/blob/main/Jenkins/Scenarios/Scenario-5.md
 

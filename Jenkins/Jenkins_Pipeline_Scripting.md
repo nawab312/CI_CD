@@ -105,6 +105,7 @@ timeout(time: 1, unit: 'HOURS') {
 }
 ```
 
+---
 
 **disableConcurrentBuilds**
 - Prevents multiple builds of the same job from running simultaneously.

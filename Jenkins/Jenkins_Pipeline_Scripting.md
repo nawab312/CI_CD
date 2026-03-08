@@ -223,4 +223,49 @@ post {
 ```
 - cleanup: Always runs last, after all other post conditions.
 
+```groovy
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+  }
+  post {
+    always {
+      // Runs always — success or failure
+      // Used for notifications, reports
+      echo 'Pipeline finished!'
+      junit 'target/surefire-reports/*.xml'
+    }
+    success {
+      // Runs only when pipeline succeeds
+      // Used for deployment, celebrations!
+      echo 'Build succeeded!'
+      slackSend message: 'Build passed!'
+    }
+    failure {
+      // Runs only when pipeline fails
+      // Used for alerts, notifications
+      echo 'Build failed!'
+      slackSend message: 'Build failed!'
+    }
+    unstable {
+      // Runs when build is unstable
+      // Example: tests passed but with warnings
+      echo 'Build unstable!'
+    }
+    cleanup {
+      // Runs LAST — after all other post conditions
+      // Used for cleaning up resources
+      // Runs even if always/success/failure blocks fail!
+      cleanWs()
+      sh 'docker system prune -f'
+    }
+  }
+}
+```
+
 ---

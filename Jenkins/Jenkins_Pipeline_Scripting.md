@@ -48,7 +48,7 @@ steps {
 }
 ```
 
-### What happens at runtime:
+- What happens at runtime:
 ```
 Job A  →  grabs lock  →  deploys  →  releases lock
 Job B  →  WAITS...    →  grabs lock  →  deploys  →  releases lock

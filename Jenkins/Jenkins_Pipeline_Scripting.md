@@ -29,7 +29,40 @@ input {
 ```
 - `ok` — Custom label for the Proceed button (default is "Proceed")
 - `submitter` — Restricts who can approve. Others will see it but can't click.
-- 
+- `submitterParameter` — Captures the name of whoever approved into a variable. Later use: `echo "Approved by ${APPROVED_BY}"`
+- `parameters` — Lets the approver provide input values before proceeding
+
+- Capturing Input Values
+```groovy
+stage('Approve') {
+    steps {
+        script {
+            def userInput = input(
+                message: 'Deploy?',
+                parameters: [
+                    string(name: 'VERSION', description: 'Which version?'),
+                    choice(name: 'ENV', choices: ['prod', 'staging'])
+                ]
+            )
+            echo "Deploying version: ${userInput.VERSION}"
+            echo "Target env: ${userInput.ENV}"
+        }
+    }
+}
+```
+
+- Timeout — Don't Wait Forever. By default `input` waits indefinitely. Combine it with `timeout` to auto-abort:
+```groovy
+stage('Approve') {
+    options {
+        timeout(time: 24, unit: 'HOURS') // auto-abort after 24 hours
+    }
+    steps {
+        input message: 'Deploy to production?', ok: 'Deploy'
+    }
+}
+```
+
 ### Who Can Approve ###
 
 **RBAC Control**

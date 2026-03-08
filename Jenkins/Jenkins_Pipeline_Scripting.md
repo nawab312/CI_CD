@@ -126,6 +126,8 @@ Job C  →  WAITS...    →  WAITS...    →  grabs lock  →  deploys
 lock('whatever-you-want')  // the name is up to you
 ```
 
+---
+
 **quietPeriod**
 - Adds a deliberate delay (in seconds) before a build actually starts after being triggered.
 ```groovy
@@ -137,3 +139,88 @@ pipeline {
 ```
 - During the quiet period, if another trigger fires for the same job, Jenkins resets or merges them — so you end up with one build instead of many rapid-fire ones.
 - When to use it: SCM polling jobs where rapid successive commits should be batched into a single build, or webhook-heavy repos where you want to debounce triggers.
+
+---
+
+**post**
+- Runs steps after the pipeline or stage finishes — regardless of whether it passed or failed. Used for cleanup, notifications, reports, etc.
+- Stage post runs before pipeline post
+- Only one post block per pipeline/stage
+```groovy
+pipeline {
+    post { ... }        // runs after entire pipeline
+
+    stages {
+        stage('Build') {
+            post { ... }    // runs after this specific stage
+            steps { ... }
+        }
+    }
+}
+```
+- always: Runs every time, no matter the result.
+```groovy
+post {
+    always {
+        echo 'Pipeline finished'
+        cleanWs()   // clean workspace always
+    }
+}
+```
+- success and failure
+```groovy
+post {
+    success {
+        echo 'Build passed! Notifying team...'
+        slackSend color: 'good', message: 'Deploy succeeded!'
+    }
+    failure {
+        echo 'Build failed! Alerting on-call...'
+        slackSend color: 'danger', message: 'Deploy FAILED!'
+        mail to: 'team@company.com', subject: 'Build Failed'
+    }
+}
+```
+- unstable: Triggered when build is marked unstable — typically from test failures that don't fully break the build.
+```groovy
+post {
+    unstable {
+        echo 'Some tests failed — marking as unstable'
+        slackSend color: 'warning', message: 'Tests are flaky!'
+    }
+}
+```
+- aborted: When someone manually clicks "Abort" in the Jenkins UI.
+```groovy
+post {
+    aborted {
+        echo 'Pipeline was manually stopped'
+        // release any held resources
+    }
+}
+```
+- changed: Only runs if the result is different from the previous build.
+```groovy
+post {
+    changed {
+        echo 'Result changed from last run!'
+        // useful to avoid spamming notifications
+    }
+}
+```
+- fixed and regression: More specific versions of changed:
+```groovy
+post {
+    fixed {
+        // previous build FAILED, this one PASSED
+        slackSend color: 'good', message: 'Build is fixed!'
+    }
+    regression {
+        // previous build PASSED, this one FAILED
+        slackSend color: 'danger', message: 'Build just broke!'
+    }
+}
+```
+- cleanup: Always runs last, after all other post conditions.
+
+---

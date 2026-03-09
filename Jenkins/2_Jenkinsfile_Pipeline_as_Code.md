@@ -1,5 +1,6 @@
-**Declarative vs Scripted Pipeline**
-- Declarative Pipeline: Declarative is the modern, structured way to write pipelines. It has a fixed structure and is easier to read.
+### Declarative vs Scripted Pipeline ####
+**Declarative Pipeline**
+- Declarative is the modern, structured way to write pipelines. It has a fixed structure and is easier to read.
 ```groovy
 pipeline {
     agent any
@@ -39,7 +40,8 @@ pipeline {
     }
 }
 ```
-- Scripted Pipeline: Scripted is the older, flexible way. It is pure Groovy code, giving you full programming power.
+**Scripted Pipeline**
+- Scripted is the older, flexible way. It is pure Groovy code, giving you full programming power.
 ```groovy
 node {
     def appName = 'myapp'
@@ -98,8 +100,12 @@ pipeline {
 }
 ```
 
-**Pipeline Syntax Deep Dive**
-- `agent` — Where the pipeline runs
+---
+---
+
+### Pipeline Syntax Deep Dive ###
+**agent**
+— Where the pipeline runs
 ```groovy
 // Run on any available agent
 agent any
@@ -137,6 +143,13 @@ agent {
 // No agent at top level (define per stage)
 agent none
 ```
+- `agent none` usefule when:
+  - Different stages need different agents: Linux, Windows, Docker
+  - Save resources: Agent only allocated when stage runs
+  - Flexibility: Each stage picks best agent for its job
+
+---
+
 - `environment` — Define variables
 ```groovy
 pipeline {

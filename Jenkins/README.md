@@ -1,146 +1,154 @@
-### CI/CD Fundamentals ###
-- **What is CI/CD?**
-  - **Continuous Integration (CI), Continuous Deployment (CD), Continuous Delivery (CD)**
-  - **CI/CD Benefits & Workflow**
-- **CI/CD Best Practices**
-- **CI/CD Pipeline Components**
-  - **Source Code Management (SCM)**
-  - **Build**
-  - **Test (Unit, Integration, Functional, Security)**
-  - **Deployment**
-  - **Monitoring & Feedback Loop**
+1. Jenkins Architecture (Always asked)
 
-### Jenkins Fundamentals ###
-- **What is Jenkins?**
-- **Jenkins Architecture**
-  - **Master-Agent Setup**
-  - **Jenkins Jobs & Pipelines**
-- **Installation & Setup**
-  - **Installing Jenkins on Linux, Windows, Docker**
-  - **Jenkins Configuration**
-  - **Managing Plugins**
-  - **Security Best Practices (User Roles, Authentication)**
-  - **Jenkins Backup & Restore**
+Master/Controller vs Agent/Node architecture
+How builds are distributed across agents
+Inbound vs Outbound agents (JNLP vs SSH)
+Jenkins in Kubernetes (dynamic agents with pods)
+How it compares to GitHub Actions runners
 
-### Jenkins Pipeline & Scripting ###
-- **Jenkins Pipeline Basics**
-  - **Freestyle Jobs vs Pipelines**
-  - **Declarative vs Scripted Pipelines** 
-- **Jenkinsfile Syntax**
-  - **Stages & Steps**
-  - **Environment Variables & Parameters**
-  - **Post Build Actions**
-- **Pipeline as Code**
-  - **Writing & Storing Jenkinsfiles in Git**
-  - **Shared Libraries in Pipelines**
-- **Advanced Groovy Scripting in Jenkins**
-  - **Dynamic Pipeline Creation**
-  - **Looping & Conditional Execution**
-- **Pipeline Execution Optimization**
-  - **Throttle Concurrent Builds and Cancel Previous Running Jobs**
-  - **Using the quietPeriod directive**
-  - **Handling Job Queue & Resource Utilization**
+2. Jenkinsfile & Pipeline as Code (Core topic)
 
-### Source Code Management (SCM)
+Declarative vs Scripted pipeline — differences & when to use
+Pipeline syntax deep dive (agent, stages, steps, post)
+Shared Libraries — structure, usage, why they matter
+Reusable pipeline templates
+Parallel stages and parallel execution
+Pipeline best practices
 
-    Jenkins & Git Integration
+3. Agents & Executors (Scenario-based)
 
-        Webhooks & Polling
+Static vs dynamic agents
+Docker agents in pipelines
+Kubernetes agents (pod templates, Jenkins K8s plugin)
+Agent labeling and restricting jobs to specific agents
+Executor count and build queue management
 
-        Multi-Branch Pipelines
+4. SCM Integration (Practical)
 
-        GitHub & GitLab Integration
+GitHub, GitLab, Bitbucket integration
+Webhooks vs polling — differences and when to use which
+Multibranch pipelines
+Branch discovery strategies
+Pull request builds and status checks
 
-    Branching Strategies
+5. Credentials & Secrets Management (Security round)
 
-        Feature Branching
+Jenkins credentials store types (username/password, SSH, secret text, certificates)
+Using credentials in pipelines (withCredentials)
+Vault integration with Jenkins
+Masking secrets in logs
+Comparison to GitHub Actions secrets
 
-        Gitflow
+6. Jenkins Plugins (Practical knowledge)
 
-        Trunk-based Development
+Most important plugins to know
+Pipeline plugin ecosystem
+Blue Ocean
+Managing and updating plugins safely
+Plugin conflicts and troubleshooting
 
-### Build & Test Stages ###
-- **Build Tools**
- - **Maven, Gradle, NPM, Makefile**
- - **Dependency Management**
-- **Automated Testing**
- - **Unit Tests (JUnit, PyTest)**
- - **Integration Tests**
- - **Code Quality & Security Scanning**
- - **SonarQube & SAST Tools Integration**
+7. Build Triggers (Commonly asked)
 
-### Artifact Management ###
-- **Storing Build Artifacts**
- - **Nexus, Artifactory, AWS S3, Docker Hub**
-- **Versioning & Tagging Releases**
- - **Artifact Promotion Strategies**
+SCM polling vs webhooks
+Upstream/downstream job triggers
+Cron-based triggers
+Remote trigger via API
+GitHub PR triggers
 
-### Containerization & Orchestration in CI/CD ###
-- **Jenkins with Docker**
- - **Building & Pushing Docker Images**
- - **Running Jenkins in Docker**
-- **Jenkins with Kubernetes**
- - **Deploying Jenkins on Kubernetes**
- - **Running CI/CD Pipelines in Kubernetes (Jenkins Agents on Kubernetes)**
-- **Helm & Jenkins**
- - **Managing Helm Charts in Jenkins**
-- **Jenkins X for Cloud-Native CI/CD**
+8. Artifact Management (CI/CD flow)
 
-### Deployment Strategies ###
-- **Traditional vs Modern Deployments**
-- **Blue-Green Deployment**
-- **Canary Deployment**
-- **Rolling Deployments**
-- **Feature Toggles & Dark Launching**
-- **Zero Downtime Deployment Strategies**
+Archiving artifacts in Jenkins
+Integration with Nexus, Artifactory, S3
+Docker image building and pushing
+Stashing and unstashing between stages
 
-9. Infrastructure as Code (IaC) in CI/CD
+9. Test Integration & Reporting (Quality rounds)
 
-    Jenkins & Terraform
+JUnit test result publishing
+Code coverage reports (JaCoCo, Istanbul)
+SonarQube integration
+Test parallelization strategies
+Failing builds based on quality gates
 
-        Automating AWS Infrastructure Deployment
+10. Jenkins + Docker (Very commonly asked)
 
-    Jenkins & Ansible
+Building Docker images in pipelines
+Docker-in-Docker (DinD) — what it is and risks
+Using Docker agents
+Pushing to DockerHub, ECR, GCR
+Layer caching strategies
 
-        Configuration Management
+11. Jenkins + Kubernetes (Senior-level)
 
-        Automated Deployments
+Running Jenkins on Kubernetes
+Dynamic pod-based agents
+Kubernetes plugin configuration
+Persistent volume for Jenkins home
+Jenkins HA on Kubernetes
 
-### Security in CI/CD ###
-- **Jenkins Security Best Practices**
- - **User Authentication & Role-Based Access Control (RBAC)**
- - **Secrets Management (Vault, AWS Secrets Manager, Jenkins Credentials)**
-- **DevSecOps in Jenkins**
- - **Static & Dynamic Security Scans (SAST & DAST)**
- - **OWASP Dependency-Check, Trivy, Aqua Security**
- - **Penetration Testing (Pentesting) in CI/CD**
-- **Software Supply Chain Security**
- - **Signed Commits & Code Reviews**
- - **SBOM (Software Bill of Materials)**
- - **Signing Artifacts & Images**  
+12. Jenkins + Cloud (DevOps rounds)
 
-### Monitoring & Observability in CI/CD ###
-- **Monitoring in CI/CD (With KPIs, SLIs, SLOs, and SLAs)**
-- **Observability in CI/CD (With KPIs, SLIs, SLOs, and SLAs)**
+Jenkins with AWS (ECR, EKS, CodeArtifact, S3)
+Jenkins with Azure DevOps / AKS
+IAM roles for Jenkins agents (IRSA on EKS)
+Cloud-specific plugins
 
-12. Jenkins & Cloud Integrations
+13. Security in Jenkins (Security-focused rounds)
 
-    Jenkins on AWS
+Matrix-based security vs Project-based security
+Role Strategy Plugin
+CSRF protection
+Script Security and Groovy sandbox
+Securing Jenkins behind a reverse proxy
+Audit logging
 
-        AWS EC2, S3, IAM, ECR, ECS, Lambda
+14. Jenkins High Availability & Scaling (Architectural rounds)
 
-    Jenkins with AWS CodePipeline
+Jenkins HA options (active-passive)
+CloudBees HA vs open source limitations
+Scaling agents horizontally
+Build queue management
+Jenkins backup strategies (ThinBackup, config-as-code)
 
-    Jenkins on Azure & GCP
+15. Jenkins Configuration as Code (JCasC) (Modern Jenkins)
 
-    Serverless CI/CD Pipelines
+What is JCasC plugin
+Defining Jenkins config in YAML
+Managing credentials, agents, plugins via code
+GitOps for Jenkins itself
+Comparison to how GitHub Actions is configured
 
-### Advanced Jenkins Topics ###
-- **Jenkins Performance Optimization**
- - **Distributed Builds**
- - **Parallel Execution**
-- **Self-Healing Pipelines**
- - **Auto-retry Mechanisms**
-- **CI/CD Metrics & Analytics**
- - **DORA Metrics (Deployment Frequency, Lead Time, MTTR, Change Failure Rate)**
+16. Shared Libraries (Senior must-know)
+
+Structure of a shared library
+vars/ vs src/ vs resources/
+Loading libraries (implicit vs explicit)
+Versioning shared libraries
+Writing reusable steps and functions
+
+17. Pipeline Optimization (Performance rounds)
+
+Reducing pipeline execution time
+Parallel stages
+Caching dependencies (Maven, npm, pip)
+Workspace cleanup strategies
+Avoiding redundant stages
+
+18. Monitoring & Observability (Ops rounds)
+
+Jenkins Prometheus plugin
+Key metrics: build duration, queue length, agent utilization
+Grafana dashboards for Jenkins
+Build failure alerting (email, Slack)
+Log management for Jenkins
+
+19. Troubleshooting Jenkins (Scenario-based rounds)
+
+Build stuck in queue — how to debug
+Out of disk space on master
+Agent goes offline mid-build
+Pipeline hangs — how to identify
+Groovy java.io.NotSerializableException error
+Common pipeline anti-patterns
+
 

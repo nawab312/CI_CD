@@ -298,7 +298,11 @@ pipeline {
     }
 }
 ```
-- `options` — Pipeline-level settings
+
+---
+
+**options**
+— Pipeline-level settings
 ```groovy
 pipeline {
     agent any
@@ -323,23 +327,28 @@ pipeline {
     stages { ... }
 }
 ```
-  - `disableConcurrentBuilds`: Prevents multiple builds of the same job from running simultaneously. When a new build is triggered while another is already running, Jenkins will either queue it or abort it. You can configure the behavior:
-    ```groovy
-    disableConcurrentBuilds(abortPrevious: true)  // kills the running build
-    disableConcurrentBuilds(abortPrevious: false) // queues the new build (default)
-    ```
-    - When to use it: Deployment pipelines where two deploys at once would conflict, jobs that write to shared resources (databases, files), or integration tests that can't run in parallel.
-- `lock`: Imagine you have 3 different Jenkins jobs that all deploy to the same staging server
-    ```bash
+- `disableConcurrentBuilds`:
+  - Prevents multiple builds of the same job from running simultaneously. When a new build is triggered while another is already running, Jenkins will either queue it or abort it. You can configure the behavior:
+  ```groovy
+  disableConcurrentBuilds(abortPrevious: true)  // kills the running build
+  disableConcurrentBuilds(abortPrevious: false) // queues the new build (default)
+  ```
+  - When to use it: Deployment pipelines where two deploys at once would conflict, jobs that write to shared resources (databases, files), or integration tests that can't run in parallel.
+
+---
+
+**lock**
+- Imagine you have 3 different Jenkins jobs that all deploy to the same staging server
+```bash
     Job A  ──deploys to──▶  staging-server  ◀──deploys to──  Job B
                                   ▲
                                   │
                             Job C deploys too
-    ```
-    - If all 3 run at the same time → chaos. Files overwrite each other, configs clash, tests fail randomly.
-    - `disableConcurrentBuilds` won't help here — it only blocks the same job from running twice. These are different jobs.
-    - You give the shared resource a name, and any job that wants to use it must acquire the lock first. Only one job holds it at a time
-    ```groovy
+```
+- If all 3 run at the same time → chaos. Files overwrite each other, configs clash, tests fail randomly.
+- `disableConcurrentBuilds` won't help here — it only blocks the same job from running twice. These are different jobs.
+- You give the shared resource a name, and any job that wants to use it must acquire the lock first. Only one job holds it at a time
+```groovy
     // Job A
     steps {
         lock('staging-server') {
@@ -360,7 +369,10 @@ pipeline {
             sh './deploy.sh'
         }
     }
-    ```
+```
+
+---
+
 - `parameters`: User inputs before pipeline runs
 ```groovy
 pipeline {

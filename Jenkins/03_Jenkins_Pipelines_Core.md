@@ -2008,6 +2008,12 @@ pipeline {
         
         // Build not built (skipped due to when conditions, etc.)
         notBuilt { echo "Build was skipped" }
+
+        // Runs LAST after all other post conditions
+        cleanup {
+            echo "Final cleanup after pipeline execution"
+            deleteDir() // Clean workspace after everything else
+        }
     }
 }
 ```

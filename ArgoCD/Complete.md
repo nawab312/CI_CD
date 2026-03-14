@@ -756,6 +756,26 @@ data:
 For faster detection, use webhooks instead of polling:
 - GitHub → ArgoCD webhook = near-instant detection on push
 
+### 7.5 Refresh — ⚠️ Commonly Asked
+
+A **Refresh** re-fetches manifests from Git and recomputes the diff against live cluster state. It updates the sync status (`Synced` / `OutOfSync`) but **never touches the cluster**.
+
+Happens automatically every 3 minutes (the `timeout.reconciliation` interval), or instantly via Git webhook.
+
+There are two modes:
+- **Normal refresh** — uses Repo Server's cached manifests
+- **Hard refresh** — clears the cache, forces a fresh Git fetch + re-render
+```bash
+argocd app get my-app --refresh        # Normal refresh
+argocd app get my-app --hard-refresh   # Bypass cache
+```
+
+Use hard refresh when you suspect stale renders — e.g., after a force push or when Helm chart dependencies changed upstream.
+
+#### ⚠️ Refresh vs Sync in one line
+
+> Refresh tells you *what* is wrong. Sync *fixes* it.
+
 ### 🎯 Short Interview Answer
 
 > *"ArgoCD runs a reconciliation loop every 3 minutes by default — it fetches desired state from Git via the Repo Server and compares it against live cluster state using Kubernetes informers. Any difference is called drift and marks the app OutOfSync. With automated sync and selfHeal enabled, ArgoCD automatically reverts drift, including manual changes made via kubectl. For faster detection, you configure Git webhooks so ArgoCD reconciles immediately on every push."*

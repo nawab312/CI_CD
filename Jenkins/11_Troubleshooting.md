@@ -1705,6 +1705,295 @@ When a pipeline fails:
 
 ---
 
+## SCENARIO 11.26: Build Dependency Failures
+
+**⚠️ Extremely common in production — asked frequently in senior interviews**
+
+### Symptoms
+- `Could not resolve dependency` or `Package not found`
+- Build worked yesterday, fails today with no code changes
+- Dependency downloads randomly time out
+- `SNAPSHOT` dependency pulls different code each run
+- Transitive dependency conflict causing `ClassNotFoundException` at runtime
+
+### Root Causes
+
+```
+Possible Causes:
+├── External registry down (Maven Central, npm registry, PyPI)
+├── Dependency version deleted from registry (left-pad problem)
+├── SNAPSHOT dependency resolved to broken nightly build
+├── Version range specified instead of pinned version (e.g., ^1.0.0)
+├── Transitive dependency version conflict (diamond dependency)
+├── Corporate proxy/firewall blocking external registry
+├── Artifact cache corrupted on agent
+└── Private registry authentication expired
+```
+
+---
+
+### Case A: External Registry Down / Dependency Deleted
+
+```bash
+# Symptom
+[ERROR] Could not resolve com.example:library:1.4.2
+[ERROR] Could not transfer artifact from central (https://repo.maven.apache.org)
+
+# Diagnosis — test registry reachability from agent
+curl -v https://repo.maven.apache.org/maven2/
+curl -v https://registry.npmjs.org/
+
+# Check if it's a proxy issue
+curl -v --proxy http://corporate-proxy:8080 https://repo.maven.apache.org/
+```
+
+**Fix — Route through internal Nexus/Artifactory proxy:**
+
+```xml
+<!-- Maven: settings.xml — always proxy through internal Nexus -->
+<settings>
+  <mirrors>
+    <mirror>
+      <id>nexus-central</id>
+      <mirrorOf>central</mirrorOf>
+      <url>https://nexus.internal/repository/maven-proxy/</url>
+    </mirror>
+    <mirror>
+      <id>nexus-all</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://nexus.internal/repository/maven-group/</url>
+    </mirror>
+  </mirrors>
+</settings>
+```
+
+```bash
+# npm — point to internal Artifactory
+npm config set registry https://artifactory.internal/api/npm/npm-proxy/
+
+# pip — point to internal PyPI proxy
+pip install -r requirements.txt \
+  --index-url https://artifactory.internal/api/pypi/pypi-proxy/simple/
+```
+
+```groovy
+// Jenkinsfile — use internal registry consistently
+pipeline {
+    agent any
+    environment {
+        MAVEN_OPTS = '-Dmaven.repo.remote=https://nexus.internal/repository/maven-group/'
+        NPM_CONFIG_REGISTRY = 'https://artifactory.internal/api/npm/npm-proxy/'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn --settings settings.xml clean package'
+            }
+        }
+    }
+}
+```
+
+---
+
+### Case B: SNAPSHOT Dependency Resolving to Broken Build
+
+```bash
+# Symptom — different results on different runs
+# Run 1: mylib-2.1.0-20241201.123456-1.jar  ← Works
+# Run 2: mylib-2.1.0-20241202.093012-2.jar  ← Breaks
+```
+
+```xml
+<!-- Problem: SNAPSHOT versions are mutable — they change daily -->
+<dependency>
+    <groupId>com.myorg</groupId>
+    <artifactId>mylib</artifactId>
+    <version>2.1.0-SNAPSHOT</version>  <!-- Non-deterministic in CI -->
+</dependency>
+
+<!-- Fix: Pin to a release version -->
+<version>2.1.0</version>
+```
+
+```groovy
+// Jenkinsfile — disable snapshot updates for reproducibility
+stage('Build') {
+    steps {
+        // -nsu = no snapshot updates from remote
+        // Ensures same artifacts as last successful build
+        sh 'mvn clean package -nsu --batch-mode'
+    }
+}
+```
+
+---
+
+### Case C: Transitive Dependency Conflict (Diamond Problem)
+
+```bash
+# Symptom at runtime (not compile time — sneaky!)
+java.lang.NoSuchMethodError: com.fasterxml.jackson.databind.ObjectMapper.readValue(...)
+java.lang.ClassNotFoundException: org.apache.http.client.HttpClient
+
+# Diagnosis — print full dependency tree
+mvn dependency:tree -Dverbose | grep -E "omitted|conflict"
+# or
+gradle dependencies --configuration compileClasspath
+```
+
+```
+Example conflict tree:
+your-app
+├── library-A:1.0 → requires jackson:2.12
+└── library-B:1.0 → requires jackson:2.9   ← older version wins by accident
+                    jackson:2.9 (selected — wrong!)
+```
+
+```xml
+<!-- Fix: Explicitly enforce the version you need -->
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+```groovy
+// Gradle equivalent — force resolution
+configurations.all {
+    resolutionStrategy {
+        force 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+        failOnVersionConflict()  // Fail build if any conflict is unresolved
+    }
+}
+```
+
+---
+
+### Case D: Corrupted Local Dependency Cache on Agent
+
+```bash
+# Symptom — random checksum errors
+[ERROR] Checksum validation failed, expected <!DOCTYPE but was 9d7a...
+
+# Diagnosis — look for partial/failed downloads
+find ~/.m2 -name "*.lastUpdated" | head -20
+find ~/.npm -name "*.lock" | head -20
+```
+
+```groovy
+// Fix 1: Delete stale cache markers before build
+stage('Build') {
+    steps {
+        sh 'find ~/.m2 -name "*.lastUpdated" -delete'
+        sh 'mvn clean package'
+    }
+}
+
+// Fix 2: Use Docker volume for shared clean cache
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.8.6-openjdk-17'
+            args '-v jenkins-maven-cache:/root/.m2'
+        }
+    }
+}
+
+// Fix 3: Parameterized full cache wipe (not every build — expensive)
+stage('Clean Cache') {
+    when {
+        expression { return params.CLEAN_CACHE == 'true' }
+    }
+    steps {
+        sh 'rm -rf ~/.m2/repository'
+        sh 'rm -rf ~/.npm/_cacache'
+        sh 'rm -rf ~/.cache/pip'
+    }
+}
+```
+
+---
+
+### Case E: Lockfile Missing or Not Committed
+
+```bash
+# Non-deterministic — resolves latest matching versions each time
+npm install
+
+# Deterministic — uses package-lock.json exactly ✅
+npm ci
+
+# npm ci fails fast if lockfile is missing or out of sync with package.json
+# This is what you WANT in CI — fail loudly, not silently
+```
+
+```groovy
+// Jenkinsfile — enforce lockfile usage
+stage('Install Dependencies') {
+    steps {
+        sh 'npm ci'                                            // Node
+        sh 'pip install -r requirements.txt --require-hashes' // Python
+    }
+}
+
+// Add a validation stage to catch drift early
+stage('Validate Lockfile') {
+    steps {
+        sh 'npm ci --dry-run && echo "Lockfile in sync"'
+    }
+}
+```
+
+---
+
+### Prevention Checklist
+
+```
+✅ Always proxy external registries through internal Nexus/Artifactory
+✅ Never use SNAPSHOT dependencies in production pipelines
+✅ Pin all dependency versions — no ranges like ^1.0.0 or ~2.3
+✅ Commit lockfiles (package-lock.json, Pipfile.lock, go.sum) to Git
+✅ Use npm ci instead of npm install in CI
+✅ Run dependency:tree in CI and fail on conflicts
+✅ Cache dependencies in a named volume, not per-build ephemeral storage
+✅ Set timeout on dependency download steps so hangs are caught early
+```
+
+---
+
+### Interview Answer (Crisp)
+
+> "Dependency failures fall into a few categories: registry availability, version mutability, conflict resolution, and cache corruption. The root fix for most of them is the same — proxy all external dependencies through an internal Nexus or Artifactory instance so you control availability, pin all versions including transitives using dependency management blocks, commit lockfiles, and use `npm ci` or `-nsu` Maven flags in CI to enforce determinism. For transitive conflicts, I run `mvn dependency:tree` to visualize the diamond problem and force the correct version via `dependencyManagement`."
+
+---
+
+### Where to Add in category11_cicd_jenkins_troubleshooting.md
+
+Add this **after SCENARIO 11.25** and **before the Quick Reference table**.
+
+Final order at the bottom of the file:
+
+```
+SCENARIO 11.25: Complete Pipeline Failure Analysis Framework
+SCENARIO 11.26: Build Dependency Failures          ← INSERT HERE
+Quick Reference: Most Common Jenkins Error Messages
+Interview Cheat Sheet: What Interviewers Are Really Testing
+```
+
+Also add this row to the Quick Reference table:
+
+```markdown
+| `Could not resolve dependency` | Registry down or version deleted | Proxy via Nexus/Artifactory, pin all versions |
+```
+
+---
+
 ## Quick Reference: Most Common Jenkins Error Messages
 
 | Error Message | Root Cause | Quick Fix |

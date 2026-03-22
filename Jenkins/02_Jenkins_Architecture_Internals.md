@@ -883,7 +883,7 @@ When developers complain "Jenkins is slow" or "my build has been queued for 30 m
 ```
 State: WAITING
   → Quiet period not yet expired (default 5 seconds after trigger)
-  → Purpose: deduplicate rapid successive commits
+  → Purpose: deduplicate(remove duplicates) rapid successive commits
   → If same job triggered 3 times in 2 seconds → one build runs
   → Configurable: quietPeriod(0) to disable, or higher values to batch
 

@@ -38,6 +38,8 @@ Possible Causes:
 ├── Time-sensitive tests relying on local timezone
 ├── Tests relying on local file system state
 └── Docker image version drift
+
+Stale local cache: Developer has old artifacts cached in ~/.m2 or ~/.npm that no longer exist in the remote registry. Jenkins starts fresh and fails to resolve them. Fix: proxy all external dependencies through internal Nexus/Artifactory.
 ```
 
 ### Diagnosis Steps
@@ -96,6 +98,8 @@ pipeline {
 ### Interview Answer (Crisp)
 
 > "When a build passes locally but fails in Jenkins, the root cause is almost always an environment mismatch — different JDK versions, missing environment variables, or dependency drift. I start by printing the full environment in Jenkins, comparing tool versions, and checking if tests have hardcoded local paths. The long-term fix is containerizing the build environment with pinned image versions so the build runs identically everywhere."
+
+> "Prevention: Always route dependency resolution through an internal Nexus/Artifactory proxy. This ensures all artifacts are cached internally, making builds reproducible regardless of external registry availability or local cache state."
 
 ---
 
@@ -1170,6 +1174,11 @@ pipeline {
     }
 }
 ```
+⚠️ WARNING — kubectl rollout undo + ArgoCD selfHeal conflict:
+If ArgoCD has selfHeal: true enabled, it will revert your 
+kubectl rollout undo back to the broken version within 3 minutes 
+because Git still points to the broken image tag.
+Always revert Git first when using ArgoCD — never just the cluster directly.
 
 ### Database Migration Gotcha ⚠️
 

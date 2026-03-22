@@ -138,6 +138,8 @@ docker buildx build \
 
 # Image manifest list — single digest points to all architectures
 # The content-addressed digest is still immutable
+# A content-addressed digest is a hash (usually SHA256) computed from the actual bytes of the image
+# Immutable: If any file/layer in the image changes, the digest changes.
 ```
 
 #### Signing Artifacts for Supply Chain Security
@@ -186,6 +188,9 @@ pipeline {
                     sh "docker push ${FULL_IMAGE}"
                     
                     // Record the artifact — used by all downstream stages
+                    // writeFile: creates a file named artifact.txt in your Jenkins workspace.
+                    // content of the file is value of FULL_IMAGE
+                    // i.e. registry.example.com/myservice:2.4.1-abc1234
                     writeFile file: 'artifact.txt', text: FULL_IMAGE
                     archiveArtifacts 'artifact.txt'
                 }
@@ -791,6 +796,8 @@ curl -X POST https://deployments.internal/api/promotions \
 | Auditing requires reading pipeline logs | Every change is a git commit — full audit trail in git history |
 | "Works in pipeline but not in cluster" | What's in git IS what's in the cluster |
 
+The "push" model has no feedback loop. Jenkins fires and forgets — it applies manifests and moves on. If a Deployment fails to roll out 10 minutes after Jenkins declared success, Jenkins never knows. ArgoCD's health checks continuously monitor post-deployment state and surface degradation in real time.
+
 ---
 
 ### ⚙️ How Each Model Works
@@ -1317,7 +1324,7 @@ log('ERROR', 'Health check failed', [endpoint: '/health', status_code: 503])
 
 ```groovy
 // Using OpenTelemetry to trace pipeline stages
-// Jenkins OpenTelemetry Plugin sends traces to any OTLP endpoint
+// Jenkins OpenTelemetry Plugin sends traces to any OTLP endpoint (OpenTelemetry Protocol)
 
 // With the plugin, every pipeline stage becomes a span:
 // Trace: "myapp-pipeline build #1234"

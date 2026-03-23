@@ -384,7 +384,7 @@ pipeline {
 **The PR Build Merge Strategy — What Code Actually Runs:**
 
 ```
-When a PR is detected, Jenkins has 3 options for WHAT CODE to build:
+When a PR is created, Jenkins needs to decide what version of the code to actually run your build/tests on. There are three main strategies, each with pros and cons.
 
 Strategy 1: PR head only
   → Build the PR branch as-is

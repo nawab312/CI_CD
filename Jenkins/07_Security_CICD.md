@@ -374,7 +374,7 @@ With Vault dynamic secrets:
 
 ### 📌 What It Is — In Simple Terms
 
-Jenkins Pipelines (Declarative and Scripted) are Groovy programs that run on the Jenkins Controller JVM. A Groovy script with unrestricted access can read any file the Jenkins process can read, make network calls, access environment variables of all running processes, modify Jenkins configuration, and execute arbitrary shell commands. The **Groovy Sandbox** and **Script Approval** system are the security mechanisms that restrict what pipeline code can do on the Controller.
+Jenkins Pipelines (Declarative and Scripted) are Groovy programs that run on the Jenkins Controller JVM (The pipeline itself is executed by the Jenkins Controller JVM. This means all Groovy code, conditionals, loops, variable handling, etc., is evaluated by the controller. Controller sends steps that need to execute on an agent (like sh, bat, docker, checkout, etc.) to the agent.). A Groovy script with unrestricted access can read any file the Jenkins process can read, make network calls, access environment variables of all running processes, modify Jenkins configuration, and execute arbitrary shell commands. The **Groovy Sandbox** and **Script Approval** system are the security mechanisms that restrict what pipeline code can do on the Controller.
 
 ---
 
